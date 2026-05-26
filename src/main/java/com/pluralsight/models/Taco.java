@@ -10,8 +10,10 @@ public class Taco extends MenuItem {
     protected ArrayList<String> sides;
     protected String meat;
     protected boolean extraMeat;
+    protected String extraMeatType;
     protected String cheese;
     protected boolean extraCheese;
+    protected String extraCheeseType;
     protected boolean coveredInSalsaAndQueso;
 
     public Taco(String size, String shell) {
@@ -77,6 +79,14 @@ public class Taco extends MenuItem {
 
     public boolean isExtraCheese() {
         return extraCheese;
+    }
+
+    public void setExtraMeatType(String extraMeatType) {
+        this.extraMeatType = extraMeatType;
+    }
+
+    public void setExtraCheeseType(String extraCheeseType) {
+        this.extraCheeseType = extraCheeseType;
     }
 
     public boolean isCoveredInSalsaAndQueso() {

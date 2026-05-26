@@ -7,21 +7,22 @@ import java.util.Scanner;
 public class UserInterface {
     private static Scanner input = new Scanner(System.in);
 
-    public void display(){
+    public void display() {
         boolean isRunning = true;
         displayMenu();
-        while (isRunning){
+        while (isRunning) {
             System.out.print("""
-                        1. New Order
-                        0. Exit
-                        Please enter your choice:  """);
+                    1. New Order
+                    0. Exit
+                    Please enter your choice:  """);
             String choice = readInput();
-            switch (choice){
+            switch (choice) {
                 case "1" -> showOrderScreen();
                 default -> System.out.println("Invalid input. Please re-enter");
             }
         }
     }
+
     public static String readInput() {
         return input.nextLine().trim().toLowerCase();
     }
@@ -60,7 +61,7 @@ public class UserInterface {
                 4. TOPPINGS (included)
                     Lettuce  | Cilantro      | Onions    | Tomatoes | Corn
                     Radishes | Pico de Gallo | Guacamole | Jalapeños
-               
+                
                 5. SAUCES (included)
                     Salsa Verde | Salsa Roja |  Chipotle | Habanero | Mild
                 
@@ -79,7 +80,8 @@ public class UserInterface {
                 """);
         input.nextLine();
     }
-    public void showOrderScreen(){
+
+    public void showOrderScreen() {
         System.out.println("""
                 \n
                             ORDER SCREEN
@@ -90,7 +92,7 @@ public class UserInterface {
                 4. Checkout
                 Please choose: """);
         String choice = readInput();
-        switch (choice){
+        switch (choice) {
             case "1" -> addTaco();
             case "2" -> addDrink();
             case "3" -> addChipsAndSalsa();
@@ -98,78 +100,144 @@ public class UserInterface {
             default -> System.out.println("Invalid option. Please re-enter!");
         }
     }
-    public void addTaco(){
+
+    public void addTaco() {
         boolean inTacoScreen = true;
         while (inTacoScreen) {
             inTacoScreen = false;
             System.out.println("""
-                        \n
-                                TACO SCREEN
-                        ========================
-                        """);
+                    \n
+                            TACO SCREEN
+                    ========================
+                    """);
             String size = getTacoSize();
-            String shell = "";
-            while(shell.isEmpty()){
-                System.out.print("""
-                             \n
-                                 Shell
-                        ========================
-                        1. Corn
-                        2. Flour
-                        3. Hard Shell
-                        4. Bowl
-                        5. Restart taco screen
-                        Enter your choice: """);
-                String shellChoice = readInput();
-                switch (shellChoice) {
-                    case "1" -> shell = "Corn";
-                    case "2" -> shell = "Flour";
-                    case "3" -> shell = "Hard Shell";
-                    case "4" -> shell = "Bowl";
-                    case "5" -> {
-                        inTacoScreen = true;
-                        shell = "restart";
-                    }
-                    default -> System.out.println("Invalid option. Please re-enter!");
-                }
-            }
-            Taco taco = new Taco(size,shell);
-            String[] meats ={ "", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
-            int meatIndex = -1;
-            while(meatIndex < 0) {
-                System.out.print("""
-                             \n
-                                 Meat
-                        ========================
-                        0. No meat
-                        1. Carne Asada
-                        2. Al Pastor
-                        3. Carnitas
-                        4. Pollo
-                        5. Chorizo
-                        6. Pescado
-                        7. Restart taco screen
-                        Enter your choice: """);
-                int meatChoice = Integer.parseInt(readInput());
-                if (meatChoice >= 0 && meatChoice <= 6) {
-                    meatIndex = meatChoice;
-                } else if (meatChoice == 7) {
-                    inTacoScreen = true;
-                    break;
-                }else {
-                    System.out.println("Invalid option. Please re-enter!");
-                }
-                if (meatIndex >=1){
-                    taco.setMeat(meats[meatIndex]);
-                }
-
-            }
-            if(inTacoScreen){
+            String shell = getTacoShell();
+            if (shell.equals("restart")) {
+                inTacoScreen = true;
                 System.out.println("\nStarting over...");
                 continue;
             }
+            Taco taco = new Taco(size, shell);
+            boolean restart = getTacoMeat(taco);
+            if (restart){
+                inTacoScreen = true;
+                System.out.println("\nStarting over...");
+                continue;
 
+            }
         }
+    }
+
+    private boolean getTacoMeat(Taco taco) {
+        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
+        int meatIndex = -1;
+        while (meatIndex < 0) {
+            System.out.print("""
+                         \n
+                             Meat
+                    ========================
+                    0. No meat
+                    1. Carne Asada
+                    2. Al Pastor
+                    3. Carnitas
+                    4. Pollo
+                    5. Chorizo
+                    6. Pescado
+                    7. Restart taco screen
+                    Enter your choice: """);
+            try {
+                int meatChoice = Integer.parseInt(readInput());
+                if (meatChoice == 7) {
+                    return true;
+                } else if (meatChoice >= 0 && meatChoice <= 6) {
+                    meatIndex = meatChoice;
+                } else {
+                    System.out.println("Invalid option. Please re-enter!");
+                    break;
+                }
+            } catch (Exception e) {
+                System.out.println("Invalid Input. Please enter a number.");
+
+            }
+            if (meatIndex == 0) {
+                return false;
+            }
+            taco.setMeat(meats[meatIndex]);
+
+            if (meatIndex != 0) {
+                String extraMeatChoice = "";
+                while (extraMeatChoice.isEmpty()) {
+                    System.out.print("""
+                                 \n
+                                 Extra Meat?
+                            ========================
+                            Y. Yes
+                            N. No
+                            Enter your choice: """);
+                    switch (readInput()) {
+                        case "y" -> extraMeatChoice = "yes";
+                        case "n" -> extraMeatChoice = "no";
+                        default -> System.out.println("Invalid option. Please re-enter!");
+                    }
+                }
+                if (extraMeatChoice.equals("yes")) {
+                    taco.setExtraMeat(true);
+                    int extraMeatIndex = -1;
+                    while (extraMeatIndex < 0) {
+                        System.out.print("""
+                                     \n
+                                         Meat
+                                ========================
+                                1. Carne Asada
+                                2. Al Pastor
+                                3. Carnitas
+                                4. Pollo
+                                5. Chorizo
+                                6. Pescado
+                                Enter your choice: """);
+                        int extraMeatType = Integer.parseInt(readInput());
+                        if (extraMeatType > 0 && extraMeatType <= 6) {
+                            extraMeatIndex = extraMeatType;
+                        } else if (extraMeatType == 7) {
+                            break;
+                        } else {
+                            System.out.println("Invalid option. Please re-enter!");
+                            break;
+                        }
+                        taco.setExtraMeatType(meats[extraMeatIndex]);
+                    }
+                }
+            }
+        }
+        return  false;
+    }
+
+
+
+    private static String getTacoShell() {
+        String shell = "";
+        while(shell.isEmpty()){
+            System.out.print("""
+                         \n
+                             Shell
+                    ========================
+                    1. Corn
+                    2. Flour
+                    3. Hard Shell
+                    4. Bowl
+                    5. Restart taco screen
+                    Enter your choice: """);
+            String shellChoice = readInput();
+            switch (shellChoice) {
+                case "1" -> shell = "Corn";
+                case "2" -> shell = "Flour";
+                case "3" -> shell = "Hard Shell";
+                case "4" -> shell = "Bowl";
+                case "5" -> shell = "restart";
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+        return shell;
     }
 
     private static String getTacoSize() {
