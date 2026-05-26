@@ -119,12 +119,19 @@ public class UserInterface {
             }
             Taco taco = new Taco(size, shell);
             boolean restart = getTacoMeat(taco);
-            if (restart){
+            if (restart) {
+                inTacoScreen = true;
+                System.out.println("\nStarting over...");
+                continue;
+            }
+            restart = getTacoCheese(taco);
+            if (restart) {
                 inTacoScreen = true;
                 System.out.println("\nStarting over...");
                 continue;
 
             }
+            getTacoToppings(taco);
         }
     }
 
@@ -209,14 +216,12 @@ public class UserInterface {
                 }
             }
         }
-        return  false;
+        return false;
     }
-
-
 
     private static String getTacoShell() {
         String shell = "";
-        while(shell.isEmpty()){
+        while (shell.isEmpty()) {
             System.out.print("""
                          \n
                              Shell
@@ -242,7 +247,7 @@ public class UserInterface {
 
     private static String getTacoSize() {
         String size = "";
-        while(size.isEmpty()) {
+        while (size.isEmpty()) {
             System.out.print("""
                          \n
                                Size
@@ -262,7 +267,124 @@ public class UserInterface {
         return size;
     }
 
-    public void addDrink(){}
-    public void addChipsAndSalsa(){}
-    public void checkOut(){}
+    private boolean getTacoCheese(Taco taco) {
+        String[] cheeses = {"", "Queso Fresco", "Oaxaca", "Cotija", "Cheddar"};
+        int cheeseIndex = -1;
+        while (cheeseIndex < 0) {
+            System.out.print("""
+                    \n
+                           Cheese
+                    ========================
+                    0. No cheese
+                    1. Queso Fresco
+                    2. Oaxaca
+                    3. Cotija
+                    4. Cheddar
+                    5. Restart taco screen
+                    Enter your choice: """);
+            try {
+                int choice = Integer.parseInt(readInput());
+                if (choice == 5) {
+                    return true;
+                } else if (choice >= 0 && choice <= 4) {
+                    cheeseIndex = choice;
+                } else System.out.println("  Invalid option. Please enter 0 through 5.");
+            } catch (Exception e) {
+                System.out.println("  Invalid option. Please enter a number.");
+            }
+        }
+
+        if (cheeseIndex == 0) {
+            return false;
+        }
+        taco.setCheese(cheeses[cheeseIndex]);
+        if (cheeseIndex != 0) {
+            String extraCheeseChoice = "";
+            while (extraCheeseChoice.isEmpty()) {
+                System.out.print("""
+                             \n
+                             Extra Cheese?
+                        ========================
+                        Y. Yes
+                        N. No
+                        Enter your choice: """);
+                switch (readInput()) {
+                    case "y" -> extraCheeseChoice = "yes";
+                    case "n" -> extraCheeseChoice = "no";
+                    default -> System.out.println("Invalid option. Please re-enter!");
+                }
+            }
+            if (extraCheeseChoice.equals("yes")) {
+                taco.setExtraCheese(true);
+                int extraCheeseIndex = -1;
+                while (extraCheeseIndex < 0) {
+                    System.out.print("""
+                            \n
+                                  Extra Cheese
+                            ========================
+                            1. Queso Fresco
+                            2. Oaxaca
+                            3. Cotija
+                            4. Cheddar
+                            5. Restart taco screen
+                            Enter your choice: """);
+                    int extraCheeseType = Integer.parseInt(readInput());
+                    if (extraCheeseType > 0 && extraCheeseType <= 6) {
+                        extraCheeseIndex = extraCheeseType;
+                    } else if (extraCheeseType == 7) {
+                        break;
+                    } else {
+                        System.out.println("Invalid option. Please re-enter!");
+                        break;
+                    }
+                    taco.setExtraCheeseType(cheeses[extraCheeseIndex]);
+                }
+            }
+        }
+        return false;
+    }
+
+    private void getTacoToppings(Taco taco) {
+        String[] toppings = {"", "Lettuce", "Cilantro", "Onions", "Tomatoes",
+                "Jalapeños", "Radishes", "Pico de Gallo", "Guacamole", "Corn"};
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.print("""
+                    \n
+                       Toppings (included)
+                    ========================
+                    1. Lettuce        2. Cilantro
+                    3. Onions         4. Tomatoes
+                    5. Jalapeños      6. Radishes
+                    7. Pico de Gallo  8. Guacamole
+                    9. Corn
+                    Enter numbers separated by commas, or Enter to skip: """);
+            String toppingChoices = readInput();
+
+            if (toppingChoices.isEmpty()) {
+                return;
+            }
+            try {
+                for (String toppingChoice : toppingChoices.split(",")) {
+                    int choice = Integer.parseInt(toppingChoice.trim());
+                    if (choice >= 1 && choice <= 9) {
+                        taco.addRegularToppings(toppings[choice]);
+                    }
+                }
+                validInput = true;
+            } catch (Exception e) {
+                System.out.println("Invalid Input. Please enter a number.");
+            }
+        }
+    }
+
+
+    public void addDrink() {
+    }
+
+    public void addChipsAndSalsa() {
+    }
+
+    public void checkOut() {
+    }
 }

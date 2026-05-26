@@ -2,10 +2,12 @@ package com.pluralsight.models;
 
 public class Drink extends MenuItem {
     protected String size;
+    protected String flavor;
 
-    public Drink(String name, String size) {
+    public Drink(String size, String flavor) {
         super("Drink");
         this.size = size;
+        this.flavor = flavor;
     }
 
     public String getSize() {
@@ -16,6 +18,14 @@ public class Drink extends MenuItem {
         this.size = size;
     }
 
+    public String getFlavor() {
+        return flavor;
+    }
+
+    public void setFlavor(String flavor) {
+        this.flavor = flavor;
+    }
+
     @Override
     public double getPrice() {
         if (size.equalsIgnoreCase("Small") || size.equalsIgnoreCase("S")) {
@@ -24,6 +34,7 @@ public class Drink extends MenuItem {
         if (size.equalsIgnoreCase("Medium") || size.equalsIgnoreCase("M")) {
             return 2.50;
         }
+        //Large
         return 3.00;
     }
 
