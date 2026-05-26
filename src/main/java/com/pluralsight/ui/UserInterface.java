@@ -1,5 +1,6 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.models.ChipsAndSalsa;
 import com.pluralsight.models.Drink;
 import com.pluralsight.models.Taco;
 
@@ -243,7 +244,7 @@ public class UserInterface {
                     2. Flour
                     3. Hard Shell
                     4. Bowl
-                    5. Restart taco screen
+                    R. Restart taco screen
                     Enter your choice: """);
             String shellChoice = readInput();
             switch (shellChoice) {
@@ -251,7 +252,7 @@ public class UserInterface {
                 case "2" -> shell = "Flour";
                 case "3" -> shell = "Hard Shell";
                 case "4" -> shell = "Bowl";
-                case "5" -> shell = "restart";
+                case "r" -> shell = "restart";
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
@@ -268,14 +269,14 @@ public class UserInterface {
                     1. Single Taco     $3.50
                     2. 3-Taco Plate    $9.00
                     3. Burrito         $8.50
-                    4. Return to Home Screen
+                    R. Return to Home Screen
                     Enter your choice: """);
             String sizeChoice = readInput();
             switch (sizeChoice) {
                 case "1" -> size = "Single Taco";
                 case "2" -> size = "3- Taco Plate";
                 case "3" -> size = "Burrito";
-                case "4" -> size = "return";
+                case "r" -> size = "return";
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
@@ -476,14 +477,14 @@ public class UserInterface {
                     1. Small        $2.00
                     2. Medium       $2.50
                     3. Large        $3.00
-                    4. Return to order screen
+                    R. Return to order screen
                     Enter your choice, or Enter to skip: """);
             String drinkChoice = readInput();
             switch (drinkChoice) {
                 case "1" -> size = "Small";
                 case "2" -> size = "Medium";
                 case "3" -> size = "Large";
-                case "4" -> inDrinkScreen = false;
+                case "r" -> inDrinkScreen = false;
                 case "" -> {
                     return;
                 }
@@ -491,7 +492,7 @@ public class UserInterface {
             }
             if (!size.isEmpty()) {
                 String flavor = "";
-                while (!flavor.isEmpty()) {
+                while (flavor.isEmpty()) {
                     System.out.print("""
                             1. Coke
                             2. Horchata
@@ -502,7 +503,9 @@ public class UserInterface {
                         case "1" -> flavor = "Coke";
                         case "2" -> flavor = "Horchata";
                         case "3" -> flavor = "Jamaica";
-                        default -> System.out.println("Invalid option. Please re-enter!");
+                        default -> {
+                            System.out.println("Invalid option. Please re-enter!");
+                        }
                     }
                     Drink drink = new Drink(size, flavor);
                     return;
@@ -512,6 +515,51 @@ public class UserInterface {
     }
 
     public void addChipsAndSalsa() {
+        boolean inChipsAndSalsaScreen = true;
+        while (inChipsAndSalsaScreen) {
+            System.out.print("""
+                    \n
+                      CHIPS & SALSA SCREEN
+                    =========================
+                    Add-on Chips & Salsa $1.50
+                    Y. Yes
+                    N. No
+                    R. Return to order screen
+                    Enter your choice, or Enter to skip: """);
+            String chipsAndSalsaChoice = readInput();
+            switch (chipsAndSalsaChoice) {
+                case "y" -> {
+                    String chipsChoice = "";
+                    while (chipsChoice.isEmpty()) {
+                        System.out.println("""
+                                \n
+                                Select your chips
+                                1. Hot Cheetos
+                                2. Sabrita
+                                3. Chicharrones
+                                4. Lays
+                                Enter your choice: """);
+                        String chips = readInput();
+                        switch (chips) {
+                            case "1" -> chips = "Hot Cheetos";
+                            case "2" -> chips = "Sabrita";
+                            case "3" -> chips = "Chicharrones";
+                            case "4" -> chips = "Lays";
+                            default -> {
+                                System.out.println("Invalid option. Please re-enter!");
+                                continue;
+                            }
+                        }
+                        ChipsAndSalsa chipsAndSalsa = new ChipsAndSalsa(chips);
+                        return;
+                    }
+                }
+                case "n", "", "r" -> {
+                    inChipsAndSalsaScreen = false;
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
     }
 
     public void checkOut() {
