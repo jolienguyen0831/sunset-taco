@@ -2,7 +2,7 @@ package com.pluralsight.models;
 
 import java.util.ArrayList;
 
-public class Taco implements MenuItem {
+public class Taco extends MenuItem {
     protected String size;
     protected String shell;
     protected ArrayList<String> regularToppings;
@@ -15,6 +15,7 @@ public class Taco implements MenuItem {
     protected boolean coveredInSalsaAndQueso;
 
     public Taco(String size, String shell) {
+        super("Taco");
         this.size = size;
         this.shell = shell;
         this.regularToppings = new ArrayList<>();
@@ -158,5 +159,4 @@ public class Taco implements MenuItem {
         }
         return 0;
     }
-
 }
