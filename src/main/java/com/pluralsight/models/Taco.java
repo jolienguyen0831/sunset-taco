@@ -33,8 +33,8 @@ public class Taco extends MenuItem {
         sauces.add(sauce);
     }
 
-    public void addSize(String size) {
-        sides.add(size);
+    public void addSide(String side) {
+        sides.add(side);
     }
 
     public void setMeat(String meat) {

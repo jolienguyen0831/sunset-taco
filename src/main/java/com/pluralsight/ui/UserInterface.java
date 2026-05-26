@@ -1,5 +1,6 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.models.Drink;
 import com.pluralsight.models.Taco;
 
 import java.util.Scanner;
@@ -82,22 +83,28 @@ public class UserInterface {
     }
 
     public void showOrderScreen() {
-        System.out.println("""
-                \n
-                            ORDER SCREEN
-                ====================================
-                1. Add Taco
-                2. Add Drink
-                3. Add Chips & Salsa
-                4. Checkout
-                Please choose: """);
-        String choice = readInput();
-        switch (choice) {
-            case "1" -> addTaco();
-            case "2" -> addDrink();
-            case "3" -> addChipsAndSalsa();
-            case "4" -> checkOut();
-            default -> System.out.println("Invalid option. Please re-enter!");
+        boolean ordering = true;
+        while (ordering) {
+            System.out.println("""
+                    \n
+                                ORDER SCREEN
+                    ====================================
+                    1. Add Taco
+                    2. Add Drink
+                    3. Add Chips & Salsa
+                    4. Checkout
+                    Please choose: """);
+            String choice = readInput();
+            switch (choice) {
+                case "1" -> addTaco();
+                case "2" -> addDrink();
+                case "3" -> addChipsAndSalsa();
+                case "4" -> {
+                    checkOut();
+                    ordering = false;
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
         }
     }
 
@@ -111,6 +118,9 @@ public class UserInterface {
                     ========================
                     """);
             String size = getTacoSize();
+            if (size.equals("return")){
+                return;
+            }
             String shell = getTacoShell();
             if (shell.equals("restart")) {
                 inTacoScreen = true;
@@ -132,6 +142,9 @@ public class UserInterface {
 
             }
             getTacoToppings(taco);
+            getTacoSauces(taco);
+            getTacoSides(taco);
+            getTacoCover(taco);
         }
     }
 
@@ -255,12 +268,14 @@ public class UserInterface {
                     1. Single Taco     $3.50
                     2. 3-Taco Plate    $9.00
                     3. Burrito         $8.50
+                    4. Return to Home Screen
                     Enter your choice: """);
             String sizeChoice = readInput();
             switch (sizeChoice) {
                 case "1" -> size = "Single Taco";
                 case "2" -> size = "3- Taco Plate";
                 case "3" -> size = "Burrito";
+                case "4" -> size = "return";
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
@@ -352,7 +367,7 @@ public class UserInterface {
             System.out.print("""
                     \n
                        Toppings (included)
-                    ========================
+                    =========================
                     1. Lettuce        2. Cilantro
                     3. Onions         4. Tomatoes
                     5. Jalapeños      6. Radishes
@@ -373,13 +388,127 @@ public class UserInterface {
                 }
                 validInput = true;
             } catch (Exception e) {
-                System.out.println("Invalid Input. Please enter a number.");
+                System.out.println("Invalid Input. Please enter correct format.");
             }
         }
+    }
+    private void getTacoSauces(Taco taco){
+        String[] sauces = {"", "Salsa Verde", "Salsa Roja", "Chipotle", "Habanero", "Mild"};
+        boolean validInput = false;
+        while (!validInput) {
+            System.out.print("""
+                    \n
+                        Sauces (included)
+                    ========================
+                    1. Salsa Verde    2. Salsa Roja
+                    3. Chipotle       4. Habanero
+                    5. Mild
+                    Enter numbers separated by commas, or Enter to skip: """);
+            String sauceChoices = readInput();
+            if (sauceChoices.isEmpty()){
+                return;
+            }
+            try {
+                for (String sauceChoice : sauceChoices.split(",")) {
+                    int choice = Integer.parseInt(sauceChoice.trim());
+                    if (choice >= 1 && choice <= 5) {
+                        taco.addSauce(sauces[choice]);
+                    }
+                }
+                validInput = true;
+            } catch (Exception e) {
+                System.out.println("Invalid Input. Please enter correct format.");
+            }
+        }
+    }
+    private void getTacoSides(Taco taco){
+        String sideChoice = "";
+        while (sideChoice.isEmpty()) {
+            System.out.print("""
+                    \n
+                        Sides (included)
+                    ========================
+                    1. Lime Wedges
+                    2. Crema
+                    3. Both
+                    Enter your choice, or Enter to skip: """);
+            switch (readInput()) {
+                case "" -> {
+                    return;
+                }
+                case "1" -> {
+                    sideChoice = "1";
+                    taco.addSide("Lime Wedges");
+                }
+                case "2" -> {
+                    sideChoice = "2";
+                    taco.addSide("Crema");
+                }
+                case "3" -> {
+                    sideChoice = "3";
+                    taco.addSide("Lime Wedges");
+                    taco.addSide("Crema");
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+
+    }
+    private void getTacoCover(Taco taco){
+        System.out.println("\nCover in salsa & queso?(y/n)");
+        switch (readInput()){
+            case "y" -> taco.setCoveredInSalsaAndQueso(true);
+            case "n" -> taco.setCoveredInSalsaAndQueso(false);
+            default  -> System.out.println("  Invalid option. Please enter y or n.");
+        }
+
     }
 
 
     public void addDrink() {
+        boolean inDrinkScreen = true;
+        while (inDrinkScreen) {
+            String size = "";
+            System.out.print("""
+                    \n
+                         DRINK SCREEN
+                    ========================
+                    1. Small        $2.00
+                    2. Medium       $2.50
+                    3. Large        $3.00
+                    4. Return to order screen
+                    Enter your choice, or Enter to skip: """);
+            String drinkChoice = readInput();
+            switch (drinkChoice) {
+                case "1" -> size = "Small";
+                case "2" -> size = "Medium";
+                case "3" -> size = "Large";
+                case "4" -> inDrinkScreen = false;
+                case "" -> {
+                    return;
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+            if (!size.isEmpty()) {
+                String flavor = "";
+                while (!flavor.isEmpty()) {
+                    System.out.print("""
+                            1. Coke
+                            2. Horchata
+                            3. Jamaica
+                            Enter your choice: """);
+                    flavor = readInput();
+                    switch (flavor) {
+                        case "1" -> flavor = "Coke";
+                        case "2" -> flavor = "Horchata";
+                        case "3" -> flavor = "Jamaica";
+                        default -> System.out.println("Invalid option. Please re-enter!");
+                    }
+                    Drink drink = new Drink(size, flavor);
+                    return;
+                }
+            }
+        }
     }
 
     public void addChipsAndSalsa() {
