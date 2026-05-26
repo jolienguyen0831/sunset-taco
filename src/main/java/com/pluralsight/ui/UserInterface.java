@@ -1,5 +1,7 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.models.Taco;
+
 import java.util.Scanner;
 
 public class UserInterface {
@@ -12,7 +14,7 @@ public class UserInterface {
             System.out.print("""
                         1. New Order
                         0. Exit
-                        Please enter your choice: """);
+                        Please enter your choice:  """);
             String choice = readInput();
             switch (choice){
                 case "1" -> showOrderScreen();
@@ -75,9 +77,13 @@ public class UserInterface {
                 
                 Please press ENTER to start your order!
                 """);
+        input.nextLine();
     }
     public void showOrderScreen(){
         System.out.println("""
+                \n
+                            ORDER SCREEN
+                ====================================
                 1. Add Taco
                 2. Add Drink
                 3. Add Chips & Salsa
@@ -92,7 +98,102 @@ public class UserInterface {
             default -> System.out.println("Invalid option. Please re-enter!");
         }
     }
-    public void addTaco(){}
+    public void addTaco(){
+        boolean inTacoScreen = true;
+        while (inTacoScreen) {
+            inTacoScreen = false;
+            System.out.println("""
+                        \n
+                                TACO SCREEN
+                        ========================
+                        """);
+            String size = getTacoSize();
+            String shell = "";
+            while(shell.isEmpty()){
+                System.out.print("""
+                             \n
+                                 Shell
+                        ========================
+                        1. Corn
+                        2. Flour
+                        3. Hard Shell
+                        4. Bowl
+                        5. Restart taco screen
+                        Enter your choice: """);
+                String shellChoice = readInput();
+                switch (shellChoice) {
+                    case "1" -> shell = "Corn";
+                    case "2" -> shell = "Flour";
+                    case "3" -> shell = "Hard Shell";
+                    case "4" -> shell = "Bowl";
+                    case "5" -> {
+                        inTacoScreen = true;
+                        shell = "restart";
+                    }
+                    default -> System.out.println("Invalid option. Please re-enter!");
+                }
+            }
+            Taco taco = new Taco(size,shell);
+            String[] meats ={ "", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
+            int meatIndex = -1;
+            while(meatIndex < 0) {
+                System.out.print("""
+                             \n
+                                 Meat
+                        ========================
+                        0. No meat
+                        1. Carne Asada
+                        2. Al Pastor
+                        3. Carnitas
+                        4. Pollo
+                        5. Chorizo
+                        6. Pescado
+                        7. Restart taco screen
+                        Enter your choice: """);
+                int meatChoice = Integer.parseInt(readInput());
+                if (meatChoice >= 0 && meatChoice <= 6) {
+                    meatIndex = meatChoice;
+                } else if (meatChoice == 7) {
+                    inTacoScreen = true;
+                    break;
+                }else {
+                    System.out.println("Invalid option. Please re-enter!");
+                }
+                if (meatIndex >=1){
+                    taco.setMeat(meats[meatIndex]);
+                }
+
+            }
+            if(inTacoScreen){
+                System.out.println("\nStarting over...");
+                continue;
+            }
+
+        }
+    }
+
+    private static String getTacoSize() {
+        String size = "";
+        while(size.isEmpty()) {
+            System.out.print("""
+                         \n
+                               Size
+                    ========================
+                    1. Single Taco     $3.50
+                    2. 3-Taco Plate    $9.00
+                    3. Burrito         $8.50
+                    Enter your choice: """);
+            String sizeChoice = readInput();
+            switch (sizeChoice) {
+                case "1" -> size = "Single Taco";
+                case "2" -> size = "3- Taco Plate";
+                case "3" -> size = "Burrito";
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+        return size;
+    }
+
     public void addDrink(){}
     public void addChipsAndSalsa(){}
     public void checkOut(){}
