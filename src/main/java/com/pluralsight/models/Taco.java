@@ -25,16 +25,37 @@ public class Taco extends MenuItem {
         this.sides = new ArrayList<>();
     }
 
+    public ArrayList<String> getRegularToppings() {
+        return regularToppings;
+    }
+
+    public ArrayList<String> getSauces() {
+        return sauces;
+    }
+
+    public ArrayList<String> getSides() {
+        return sides;
+    }
+
     public void addRegularToppings(String regularTopping) {
         regularToppings.add(regularTopping);
+    }
+    public void removeRegularTopping(String topping)    {
+        regularToppings.remove(topping);
     }
 
     public void addSauce( String sauce) {
         sauces.add(sauce);
     }
+    public void removeSauce(String sauce) {
+        sauces.remove(sauce);
+    }
 
     public void addSide(String side) {
         sides.add(side);
+    }
+    public void removeSide(String side){
+        sides.remove(side);
     }
 
     public void setMeat(String meat) {
