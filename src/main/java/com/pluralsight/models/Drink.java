@@ -38,4 +38,15 @@ public class Drink extends MenuItem {
         return 3.00;
     }
 
+    @Override
+    public String toString() {
+        return String.format("""
+                             DRINK
+            ---------------------------------------
+            Size   : %s
+            Flavor : %s
+            Price  : $%.2f
+            """, size, flavor, getPrice());
+    }
+
 }

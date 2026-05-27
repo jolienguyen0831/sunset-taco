@@ -169,4 +169,45 @@ public class Taco extends MenuItem {
         }
         return 0;
     }
+
+    @Override
+    public String toString() {
+        return String.format("""
+                            TACO ORDER
+            ========================================
+            Size: %s
+            Shell: %s
+            
+            Meat: %s%s
+            Cheese: %s%s
+            
+            Regular Toppings:
+            %s
+            
+            Sauces:
+            %s
+            
+            Sides:
+            %s
+            
+            Covered in Salsa & Queso: %s
+            """, size, shell, meat,
+                extraMeat
+                        ? " (Extra " + extraMeatType + ")"
+                        : "",
+                cheese,
+                extraCheese
+                        ? " (Extra " + extraCheeseType + ")"
+                        : "",
+                regularToppings.isEmpty()
+                        ? "  None"
+                        : "  - " + String.join("\n  - ", regularToppings),
+                sauces.isEmpty()
+                        ? "  None"
+                        : "  - " + String.join("\n  - ", sauces),
+                sides.isEmpty()
+                        ? "  None"
+                        : "  - " + String.join("\n  - ", sides),
+                coveredInSalsaAndQueso ? "YES 🌮" : "NO");
+    }
 }

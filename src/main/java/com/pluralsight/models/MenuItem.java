@@ -14,4 +14,7 @@ public abstract class MenuItem implements Priceable {
 
     @Override
     public abstract double getPrice();
+
+    @Override
+    public  abstract String toString();
 }

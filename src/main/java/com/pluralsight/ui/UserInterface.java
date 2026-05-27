@@ -2,24 +2,35 @@ package com.pluralsight.ui;
 
 import com.pluralsight.models.ChipsAndSalsa;
 import com.pluralsight.models.Drink;
+import com.pluralsight.models.Order;
 import com.pluralsight.models.Taco;
 
 import java.util.Scanner;
 
 public class UserInterface {
     private static final Scanner input = new Scanner(System.in);
+    private Order newOrder;
 
     public void display() {
         boolean isRunning = true;
         displayMenu();
         while (isRunning) {
             System.out.print("""
+                    \n
                     1. New Order
                     0. Exit
                     Please enter your choice:  """);
             String choice = readInput();
             switch (choice) {
-                case "1" -> showOrderScreen();
+                case "1" -> {
+                    newOrder = new Order();
+                    showOrderScreen();
+                }
+                case "0" -> {
+                    System.out.println("\nThank you for coming Sunset Taco." +
+                            "\nHave a nice day!");
+                    isRunning = false;
+                }
                 default -> System.out.println("Invalid input. Please re-enter");
             }
         }
@@ -146,6 +157,8 @@ public class UserInterface {
             getTacoSauces(taco);
             getTacoSides(taco);
             getTacoCover(taco);
+            newOrder.addItem(taco);
+            System.out.println("\nTaco added successfully!");
         }
     }
 
@@ -181,6 +194,7 @@ public class UserInterface {
 
             }
             if (meatIndex == 0) {
+                taco.setMeat("No meat");
                 return false;
             }
             taco.setMeat(meats[meatIndex]);
@@ -311,6 +325,7 @@ public class UserInterface {
         }
 
         if (cheeseIndex == 0) {
+            taco.setCheese("No cheese");
             return false;
         }
         taco.setCheese(cheeses[cheeseIndex]);
@@ -508,6 +523,8 @@ public class UserInterface {
                         }
                     }
                     Drink drink = new Drink(size, flavor);
+                    newOrder.addItem(drink);
+                    System.out.println("\nDrink added successfully!");
                     return;
                 }
             }
@@ -551,6 +568,8 @@ public class UserInterface {
                             }
                         }
                         ChipsAndSalsa chipsAndSalsa = new ChipsAndSalsa(chips);
+                        newOrder.addItem(chipsAndSalsa);
+
                         return;
                     }
                 }
