@@ -1,5 +1,6 @@
 package com.pluralsight.ui;
 
+import com.pluralsight.data.ReceiptWriter;
 import com.pluralsight.models.ChipsAndSalsa;
 import com.pluralsight.models.Drink;
 import com.pluralsight.models.Order;
@@ -10,6 +11,7 @@ import java.util.Scanner;
 public class UserInterface {
     private static final Scanner input = new Scanner(System.in);
     private Order newOrder;
+    private ReceiptWriter receiptWriter;
 
     public void display() {
         boolean isRunning = true;
@@ -24,6 +26,7 @@ public class UserInterface {
             switch (choice) {
                 case "1" -> {
                     newOrder = new Order();
+                    receiptWriter = new ReceiptWriter("receipts");
                     showOrderScreen();
                 }
                 case "0" -> {
@@ -581,5 +584,6 @@ public class UserInterface {
         }
     }
     public void checkOut() {
+        
     }
 }

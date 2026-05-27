@@ -28,20 +28,22 @@ public class Order {
         return items.stream().mapToDouble(MenuItem::getPrice).sum();
     }
 
-    public void getOrderSummary() {
-        System.out.println("""
+    public String getOrderSummary() {
+        StringBuilder stringBuilder = new StringBuilder();
+        stringBuilder.append("""
                 ========================================
                               ORDER SUMMARY
                 ========================================
                 """);
         for (int i = items.size() - 1; i >= 0; i--) {
-            System.out.println(items.get(i).toString());
+            stringBuilder.append(items.get(i).toString());
         }
-        System.out.println("_______________________________________");
-        System.out.printf("SUBTOTAL : $%.2f%n", getTotalPrice());
+        stringBuilder.append("_______________________________________");
+        stringBuilder.append(String.format("SUBTOTAL : $%.2f%n", getTotalPrice()));
         double tax = getTotalPrice() * 0.0825;
-        System.out.printf("TAX (8.25%%): $%.2f%n", tax);
-        System.out.printf("TOTAL : $%.2f%n", (getTotalPrice()+tax));
+        stringBuilder.append(String.format("TAX (8.25%%): $%.2f%n", tax));
+        stringBuilder.append(String.format("TOTAL : $%.2f%n", (getTotalPrice()+tax)));
+        return stringBuilder.toString();
     }
     public ArrayList<Taco> getTacos(){
         ArrayList<Taco> tacos = new ArrayList<>();
