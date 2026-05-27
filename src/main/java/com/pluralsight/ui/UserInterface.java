@@ -1,10 +1,7 @@
 package com.pluralsight.ui;
 
 import com.pluralsight.data.ReceiptWriter;
-import com.pluralsight.models.ChipsAndSalsa;
-import com.pluralsight.models.Drink;
-import com.pluralsight.models.Order;
-import com.pluralsight.models.Taco;
+import com.pluralsight.models.*;
 
 import java.util.Scanner;
 
@@ -21,7 +18,7 @@ public class UserInterface {
                     \n
                     1. New Order
                     0. Exit
-                    Please enter your choice:  """);
+                    Please enter your choice: \s""");
             String choice = readInput();
             switch (choice) {
                 case "1" -> {
@@ -30,8 +27,10 @@ public class UserInterface {
                     showOrderScreen();
                 }
                 case "0" -> {
-                    System.out.println("\nThank you for coming Sunset Taco." +
-                            "\nHave a nice day!");
+                    System.out.println("""
+                            
+                            Thank you for coming Sunset Taco.
+                            Have a nice day!""");
                     isRunning = false;
                 }
                 default -> System.out.println("Invalid input. Please re-enter");
@@ -92,7 +91,7 @@ public class UserInterface {
                                    ~~ CHIPS & SALSA  ~~
                     $1.50 - choice of any salsa
                 
-                Please press ENTER to start your order!
+                Please press ENTER to start!
                 """);
         input.nextLine();
     }
@@ -100,23 +99,32 @@ public class UserInterface {
     public void showOrderScreen() {
         boolean ordering = true;
         while (ordering) {
-            System.out.println("""
+            System.out.print("""
                     \n
                                 ORDER SCREEN
                     ====================================
                     1. Add Taco
                     2. Add Drink
                     3. Add Chips & Salsa
-                    4. Checkout
-                    Please choose: """);
+                    4. Show your order summary
+                    5. Checkout
+                    0. Cancel
+                    Please choose:\s""");
             String choice = readInput();
             switch (choice) {
                 case "1" -> addTaco();
                 case "2" -> addDrink();
                 case "3" -> addChipsAndSalsa();
-                case "4" -> {
+                case "4" -> System.out.println(newOrder.getOrderSummary());
+                case "5" -> {
                     checkOut();
                     ordering = false;
+                }
+                case "0" ->{
+                    if(confirmCancelOrder()){
+                        newOrder = null;
+                        ordering = false;
+                    }
                 }
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
@@ -132,29 +140,55 @@ public class UserInterface {
                             TACO SCREEN
                     ========================
                     """);
-            String size = getTacoSize();
-            if (size.equals("return")){
-                return;
+            String tacoType = "";
+            while (tacoType.isEmpty()){
+                System.out.println("""
+                        \n
+                                TACO TYPE
+                        =======================
+                        1. Street Taco (Signature)
+                        2.
+                        3. Build your own Taco
+                        Enter your choice: \s""");
             }
-            String shell = getTacoShell();
-            if (shell.equals("restart")) {
-                inTacoScreen = true;
-                System.out.println("\nStarting over...");
-                continue;
+            switch (readInput()){
+                case "1" -> tacoType = "street";
+                case "3" -> tacoType = "custom";
+                default -> System.out.println("Invalid option. Please re-enter!");
             }
-            Taco taco = new Taco(size, shell);
-            boolean restart = getTacoMeat(taco);
-            if (restart) {
-                inTacoScreen = true;
-                System.out.println("\nStarting over...");
-                continue;
+            Taco taco;
+            if (tacoType.equals("street")){
+                taco = new StreetTaco();
+            } else {
+                String size = getTacoSize();
+                if (size.equals("return")) {
+                    return;
+                }
+                String shell = getTacoShell();
+                if (shell.equals("restart")) {
+                    inTacoScreen = true;
+                    System.out.println("\nStarting over...");
+                    continue;
+                }
+                taco = new Taco(size, shell);
             }
-            restart = getTacoCheese(taco);
-            if (restart) {
-                inTacoScreen = true;
-                System.out.println("\nStarting over...");
-                continue;
-
+            System.out.println("\n Current taco:"+taco.toString());
+            if (taco instanceof StreetTaco) {
+                getExtraMeat(taco);
+                getExtraCheese(taco);
+            } else {
+                boolean restart = getTacoMeat(taco);
+                if (restart) {
+                    inTacoScreen = true;
+                    System.out.println("\nStarting over...");
+                    continue;
+                }
+                restart = getTacoCheese(taco);
+                if (restart) {
+                    inTacoScreen = true;
+                    System.out.println("\nStarting over...");
+                    continue;
+                }
             }
             getTacoToppings(taco);
             getTacoSauces(taco);
@@ -181,7 +215,7 @@ public class UserInterface {
                     5. Chorizo
                     6. Pescado
                     7. Restart taco screen
-                    Enter your choice: """);
+                    Enter your choice:\s""");
             try {
                 int meatChoice = Integer.parseInt(readInput());
                 if (meatChoice == 7) {
@@ -202,52 +236,55 @@ public class UserInterface {
             }
             taco.setMeat(meats[meatIndex]);
 
-            if (meatIndex != 0) {
-                String extraMeatChoice = "";
-                while (extraMeatChoice.isEmpty()) {
-                    System.out.print("""
-                                 \n
-                                 Extra Meat?
-                            ========================
-                            Y. Yes
-                            N. No
-                            Enter your choice: """);
-                    switch (readInput()) {
-                        case "y" -> extraMeatChoice = "yes";
-                        case "n" -> extraMeatChoice = "no";
-                        default -> System.out.println("Invalid option. Please re-enter!");
-                    }
-                }
-                if (extraMeatChoice.equals("yes")) {
-                    taco.setExtraMeat(true);
-                    int extraMeatIndex = -1;
-                    while (extraMeatIndex < 0) {
-                        System.out.print("""
-                                     \n
-                                         Meat
-                                ========================
-                                1. Carne Asada
-                                2. Al Pastor
-                                3. Carnitas
-                                4. Pollo
-                                5. Chorizo
-                                6. Pescado
-                                Enter your choice: """);
-                        int extraMeatType = Integer.parseInt(readInput());
-                        if (extraMeatType > 0 && extraMeatType <= 6) {
-                            extraMeatIndex = extraMeatType;
-                        } else if (extraMeatType == 7) {
-                            break;
-                        } else {
-                            System.out.println("Invalid option. Please re-enter!");
-                            break;
-                        }
-                        taco.setExtraMeatType(meats[extraMeatIndex]);
-                    }
-                }
-            }
+            getExtraMeat(taco);
         }
         return false;
+    }
+
+    private static void getExtraMeat(Taco taco) {
+        String[] extraMeats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
+        String extraMeatChoice = "";
+        while (extraMeatChoice.isEmpty()) {
+            System.out.print("""
+                         \n
+                         Extra Meat?
+                    ========================
+                    Y. Yes
+                    N. No
+                    Enter your choice:\s""");
+            switch (readInput()) {
+                case "y" -> extraMeatChoice = "yes";
+                case "n" -> extraMeatChoice = "no";
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+        if (extraMeatChoice.equals("yes")) {
+            taco.setExtraMeat(true);
+            int extraMeatIndex = -1;
+            while (extraMeatIndex < 0) {
+                System.out.print("""
+                             \n
+                                 Meat
+                        ========================
+                        1. Carne Asada
+                        2. Al Pastor
+                        3. Carnitas
+                        4. Pollo
+                        5. Chorizo
+                        6. Pescado
+                        Enter your choice:\s""");
+                int extraMeatType = Integer.parseInt(readInput());
+                if (extraMeatType > 0 && extraMeatType <= 6) {
+                    extraMeatIndex = extraMeatType;
+                } else if (extraMeatType == 7) {
+                    break;
+                } else {
+                    System.out.println("Invalid option. Please re-enter!");
+                    break;
+                }
+                taco.setExtraMeatType(extraMeats[extraMeatIndex]);
+            }
+    }
     }
 
     private static String getTacoShell() {
@@ -262,7 +299,7 @@ public class UserInterface {
                     3. Hard Shell
                     4. Bowl
                     R. Restart taco screen
-                    Enter your choice: """);
+                    Enter your choice:\s""");
             String shellChoice = readInput();
             switch (shellChoice) {
                 case "1" -> shell = "Corn";
@@ -287,11 +324,11 @@ public class UserInterface {
                     2. 3-Taco Plate    $9.00
                     3. Burrito         $8.50
                     R. Return to Home Screen
-                    Enter your choice: """);
+                    Enter your choice:\s""");
             String sizeChoice = readInput();
             switch (sizeChoice) {
                 case "1" -> size = "Single Taco";
-                case "2" -> size = "3- Taco Plate";
+                case "2" -> size = "3-Taco Plate";
                 case "3" -> size = "Burrito";
                 case "r" -> size = "return";
                 default -> System.out.println("Invalid option. Please re-enter!");
@@ -314,7 +351,7 @@ public class UserInterface {
                     3. Cotija
                     4. Cheddar
                     5. Restart taco screen
-                    Enter your choice: """);
+                    Enter your choice:\s""");
             try {
                 int choice = Integer.parseInt(readInput());
                 if (choice == 5) {
@@ -332,50 +369,54 @@ public class UserInterface {
             return false;
         }
         taco.setCheese(cheeses[cheeseIndex]);
-        if (cheeseIndex != 0) {
-            String extraCheeseChoice = "";
-            while (extraCheeseChoice.isEmpty()) {
-                System.out.print("""
-                             \n
-                             Extra Cheese?
-                        ========================
-                        Y. Yes
-                        N. No
-                        Enter your choice: """);
-                switch (readInput()) {
-                    case "y" -> extraCheeseChoice = "yes";
-                    case "n" -> extraCheeseChoice = "no";
-                    default -> System.out.println("Invalid option. Please re-enter!");
-                }
-            }
-            if (extraCheeseChoice.equals("yes")) {
-                taco.setExtraCheese(true);
-                int extraCheeseIndex = -1;
-                while (extraCheeseIndex < 0) {
-                    System.out.print("""
-                            \n
-                                  Extra Cheese
-                            ========================
-                            1. Queso Fresco
-                            2. Oaxaca
-                            3. Cotija
-                            4. Cheddar
-                            5. Restart taco screen
-                            Enter your choice: """);
-                    int extraCheeseType = Integer.parseInt(readInput());
-                    if (extraCheeseType > 0 && extraCheeseType <= 6) {
-                        extraCheeseIndex = extraCheeseType;
-                    } else if (extraCheeseType == 7) {
-                        break;
-                    } else {
-                        System.out.println("Invalid option. Please re-enter!");
-                        break;
-                    }
-                    taco.setExtraCheeseType(cheeses[extraCheeseIndex]);
-                }
+        getExtraCheese(taco);
+        return false;
+    }
+
+    private static void getExtraCheese(Taco taco) {
+        String extraCheeseChoice = "";
+        while (extraCheeseChoice.isEmpty()) {
+            System.out.print("""
+                         \n
+                         Extra Cheese?
+                    ========================
+                    Y. Yes
+                    N. No
+                    Enter your choice:\s""");
+            switch (readInput()) {
+                case "y" -> extraCheeseChoice = "yes";
+                case "n" -> extraCheeseChoice = "no";
+                default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
-        return false;
+        String[] extraCheeses = {"", "Queso Fresco", "Oaxaca", "Cotija", "Cheddar"};
+        if (extraCheeseChoice.equals("yes")) {
+            taco.setExtraCheese(true);
+            int extraCheeseIndex = -1;
+            while (extraCheeseIndex < 0) {
+                System.out.print("""
+                        \n
+                              Extra Cheese
+                        ========================
+                        1. Queso Fresco
+                        2. Oaxaca
+                        3. Cotija
+                        4. Cheddar
+                        5. Restart taco screen
+                        Enter your choice:\s""");
+                int extraCheeseType = Integer.parseInt(readInput());
+                if (extraCheeseType > 0 && extraCheeseType <= 6) {
+                    extraCheeseIndex = extraCheeseType;
+                } else if (extraCheeseType == 7) {
+                    break;
+                } else {
+                    System.out.println("Invalid option. Please re-enter!");
+                    break;
+                }
+                taco.setExtraCheeseType(extraCheeses[extraCheeseIndex]);
+
+        }
+    }
     }
 
     private void getTacoToppings(Taco taco) {
@@ -392,7 +433,7 @@ public class UserInterface {
                     5. Jalapeños      6. Radishes
                     7. Pico de Gallo  8. Guacamole
                     9. Corn
-                    Enter numbers separated by commas, or Enter to skip: """);
+                    Enter numbers separated by commas, or Enter to skip:\s""");
             String toppingChoices = readInput();
 
             if (toppingChoices.isEmpty()) {
@@ -422,7 +463,7 @@ public class UserInterface {
                     1. Salsa Verde    2. Salsa Roja
                     3. Chipotle       4. Habanero
                     5. Mild
-                    Enter numbers separated by commas, or Enter to skip: """);
+                    Enter numbers separated by commas, or Enter to skip:\s""");
             String sauceChoices = readInput();
             if (sauceChoices.isEmpty()){
                 return;
@@ -450,7 +491,7 @@ public class UserInterface {
                     1. Lime Wedges
                     2. Crema
                     3. Both
-                    Enter your choice, or Enter to skip: """);
+                    Enter your choice, or Enter to skip:\s""");
             switch (readInput()) {
                 case "" -> {
                     return;
@@ -496,7 +537,7 @@ public class UserInterface {
                     2. Medium       $2.50
                     3. Large        $3.00
                     R. Return to order screen
-                    Enter your choice, or Enter to skip: """);
+                    Enter your choice, or Enter to skip:\s""");
             String drinkChoice = readInput();
             switch (drinkChoice) {
                 case "1" -> size = "Small";
@@ -515,15 +556,13 @@ public class UserInterface {
                             1. Coke
                             2. Horchata
                             3. Jamaica
-                            Enter your choice: """);
+                            Enter your choice:\s""");
                     flavor = readInput();
                     switch (flavor) {
                         case "1" -> flavor = "Coke";
                         case "2" -> flavor = "Horchata";
                         case "3" -> flavor = "Jamaica";
-                        default -> {
-                            System.out.println("Invalid option. Please re-enter!");
-                        }
+                        default -> System.out.println("Invalid option. Please re-enter!");
                     }
                     Drink drink = new Drink(size, flavor);
                     newOrder.addItem(drink);
@@ -545,7 +584,7 @@ public class UserInterface {
                     Y. Yes
                     N. No
                     R. Return to order screen
-                    Enter your choice, or Enter to skip: """);
+                    Enter your choice, or Enter to skip:\s""");
             String chipsAndSalsaChoice = readInput();
             switch (chipsAndSalsaChoice) {
                 case "y" -> {
@@ -558,7 +597,7 @@ public class UserInterface {
                                 2. Sabrita
                                 3. Chicharrones
                                 4. Lays
-                                Enter your choice: """);
+                                Enter your choice: \s""");
                         String chips = readInput();
                         switch (chips) {
                             case "1" -> chips = "Hot Cheetos";
@@ -576,30 +615,24 @@ public class UserInterface {
                         return;
                     }
                 }
-                case "n", "", "r" -> {
-                    inChipsAndSalsaScreen = false;
-                }
+                case "n", "", "r" -> inChipsAndSalsaScreen = false;
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
     }
     public void checkOut() {
+        if (newOrder.getTacos().isEmpty()){
+            if(newOrder.getDrinks().isEmpty() && newOrder.getChipsAndSalsas().isEmpty()){
+                System.out.println("You must order at least a drink or chips & salsa.");
+                return;
+            }
+        }
         System.out.println("""
                 \n
                         CHECKOUT
                 =======================
                 """);
         System.out.println(newOrder.getOrderSummary());
-        if (newOrder.getItems().isEmpty()){
-            System.out.println("Your order is empty. Please add items!");
-            return;
-        }
-        if (newOrder.getTacos().isEmpty()){
-            if(newOrder.getDrinks().isEmpty() && newOrder.getChipsAndSalsa().isEmpty()){
-                System.out.println("You must order at least drink or chips & salsa.");
-                return;
-            }
-        }
         String confirmation = "";
         while (confirmation.isEmpty()){
             System.out.print("""
@@ -607,7 +640,7 @@ public class UserInterface {
                     Confirm your order!
                     Y. Confirm
                     N. Cancel
-                    Enter your choice: """);
+                    Enter your choice:\s""");
             switch (readInput()){
                 case "y" -> confirmation = "confirm";
                 case "n" -> confirmation = "cancel";
@@ -621,4 +654,30 @@ public class UserInterface {
             System.out.println("Order cancelled.");
         }
     }
+    private boolean confirmCancelOrder(){
+        String cancelChoice = "";
+        while (cancelChoice.isEmpty()){
+            System.out.println("""
+                   \n 
+                        Cancel Order?
+                   =========================
+                   All items will be deleted
+                   Y. Yes, cancel order
+                   N. No Go back
+                   Enter your choice: \s""");
+            switch (readInput()){
+                case "y" -> {
+                    cancelChoice = "yes";
+                    System.out.println("Order cancelled. Returning to home screen....");
+                }
+                case "n" ->{
+                    cancelChoice = "no";
+                    System.out.println("Returning to order screen...");
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+        return cancelChoice.equals("yes");
+    }
+
 }

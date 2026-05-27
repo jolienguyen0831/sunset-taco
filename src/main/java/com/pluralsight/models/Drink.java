@@ -41,8 +41,7 @@ public class Drink extends MenuItem {
     @Override
     public String toString() {
         return String.format("""
-                   DRINK
-            -------------------
+            Drink
             Size   : %s
             Flavor : %s
             Price  : $%.2f

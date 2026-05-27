@@ -173,24 +173,16 @@ public class Taco extends MenuItem {
     @Override
     public String toString() {
         return String.format("""
-                   TACO ORDER
-            =====================
+            Taco
             Size: %s
             Shell: %s
-            
             Meat: %s%s
             Cheese: %s%s
-            
-            Regular Toppings:
-            %s
-            
-            Sauces:
-            %s
-            
-            Sides:
-            %s
-            
+            Regular Toppings:%s
+            Sauces:%s
+            Sides:%s
             Covered in Salsa & Queso: %s
+            Price: $%.2f%n
             """, size, shell, meat,
                 extraMeat
                         ? " (Extra " + extraMeatType + ")"
@@ -201,13 +193,13 @@ public class Taco extends MenuItem {
                         : "",
                 regularToppings.isEmpty()
                         ? "  None"
-                        : "  - " + String.join("\n  - ", regularToppings),
+                        : "  - " + String.join("  - ", regularToppings),
                 sauces.isEmpty()
                         ? "  None"
-                        : "  - " + String.join("\n  - ", sauces),
+                        : "  - " + String.join(" - ", sauces),
                 sides.isEmpty()
                         ? "  None"
-                        : "  - " + String.join("\n  - ", sides),
-                coveredInSalsaAndQueso ? "YES 🌮" : "NO");
+                        : "  - " + String.join("  - ", sides),
+                coveredInSalsaAndQueso ? "YES" : "NO", getPrice());
     }
 }

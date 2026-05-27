@@ -7,7 +7,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
 public class ReceiptWriter {
-    private String fileName;
+    private final String fileName;
 
     public ReceiptWriter( String fileName) {
         this.fileName = generateFileName();
