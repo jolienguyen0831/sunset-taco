@@ -584,6 +584,41 @@ public class UserInterface {
         }
     }
     public void checkOut() {
-        receiptWriter.writeReceipt(newOrder);
+        System.out.println("""
+                \n
+                        CHECKOUT
+                =======================
+                """);
+        System.out.println(newOrder.getOrderSummary());
+        if (newOrder.getItems().isEmpty()){
+            System.out.println("Your order is empty. Please add items!");
+            return;
+        }
+        if (newOrder.getTacos().isEmpty()){
+            if(newOrder.getDrinks().isEmpty() && newOrder.getChipsAndSalsa().isEmpty()){
+                System.out.println("You must order at least drink or chips & salsa.");
+                return;
+            }
+        }
+        String confirmation = "";
+        while (confirmation.isEmpty()){
+            System.out.print("""
+                    \n
+                    Confirm your order!
+                    Y. Confirm
+                    N. Cancel
+                    Enter your choice: """);
+            switch (readInput()){
+                case "y" -> confirmation = "confirm";
+                case "n" -> confirmation = "cancel";
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+        if(confirmation.equals("confirm")) {
+            receiptWriter.writeReceipt(newOrder);
+            System.out.println("Thank you for your order!");
+        }else {
+            System.out.println("Order cancelled.");
+        }
     }
 }

@@ -1,7 +1,5 @@
 package com.pluralsight.models;
 
-import java.awt.*;
-import java.sql.SQLOutput;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,6 +51,25 @@ public class Order {
             }
         }
         return tacos;
+    }
+    public ArrayList<Drink> getDrinks(){
+        ArrayList<Drink> drinks = new ArrayList<>();
+        for(MenuItem item: items){
+            if (item instanceof Drink){
+                drinks.add((Drink) item);
+            }
+        }
+        return drinks;
+    }
+
+    public ArrayList<ChipsAndSalsa> getChipsAndSalsa(){
+        ArrayList<ChipsAndSalsa> chipsAndSalsas = new ArrayList<>();
+        for(MenuItem item: items){
+            if (item instanceof ChipsAndSalsa){
+                chipsAndSalsas.add((ChipsAndSalsa) item);
+            }
+        }
+        return chipsAndSalsas;
     }
 
 }
