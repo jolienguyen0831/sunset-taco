@@ -33,7 +33,6 @@ public class ReceiptWriter {
             writer.write("SUNSET TACO Receipt");
             writer.newLine();
             writer.newLine();
-            writer.write("--------------------------");
             writer.newLine();
             writer.write(order.getOrderSummary());
             writer.newLine();

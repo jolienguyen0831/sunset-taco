@@ -584,6 +584,6 @@ public class UserInterface {
         }
     }
     public void checkOut() {
-        
+        receiptWriter.writeReceipt(newOrder);
     }
 }

@@ -1,0 +1,34 @@
+SUNSET TACO Receipt
+
+--------------------------
+========================================
+              ORDER SUMMARY
+========================================
+                 DRINK
+---------------------------------------
+Size   : Small
+Flavor : Coke
+Price  : $2.00
+                TACO ORDER
+========================================
+Size: Single Taco
+Shell: Corn
+
+Meat: Al Pastor
+Cheese: Queso Fresco
+
+Regular Toppings:
+  - Lettuce
+
+Sauces:
+  - Salsa Verde
+
+Sides:
+  - Lime Wedges
+
+Covered in Salsa & Queso: NO
+_______________________________________SUBTOTAL : $7.25
+TAX (8.25%): $0.60
+TOTAL : $7.85
+
+Thank you for your order!

@@ -173,8 +173,8 @@ public class Taco extends MenuItem {
     @Override
     public String toString() {
         return String.format("""
-                            TACO ORDER
-            ========================================
+                   TACO ORDER
+            =====================
             Size: %s
             Shell: %s
             
