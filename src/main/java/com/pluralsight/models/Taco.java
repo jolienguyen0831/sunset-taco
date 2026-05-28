@@ -33,9 +33,7 @@ public class Taco extends MenuItem {
         return sauces;
     }
 
-    public ArrayList<String> getSides() {
-        return sides;
-    }
+
 
     public void addRegularToppings(String regularTopping) {
         regularToppings.add(regularTopping);
@@ -53,9 +51,6 @@ public class Taco extends MenuItem {
 
     public void addSide(String side) {
         sides.add(side);
-    }
-    public void removeSide(String side){
-        sides.remove(side);
     }
 
     public void setMeat(String meat) {
@@ -78,40 +73,12 @@ public class Taco extends MenuItem {
         this.coveredInSalsaAndQueso = coveredInSalsaAndQueso;
     }
 
-    public String getSize() {
-        return size;
-    }
-
-    public String getShell() {
-        return shell;
-    }
-
-    public String getMeat() {
-        return meat;
-    }
-
-    public boolean isExtraMeat() {
-        return extraMeat;
-    }
-
-    public String getCheese() {
-        return cheese;
-    }
-
-    public boolean isExtraCheese() {
-        return extraCheese;
-    }
-
     public void setExtraMeatType(String extraMeatType) {
         this.extraMeatType = extraMeatType;
     }
 
     public void setExtraCheeseType(String extraCheeseType) {
         this.extraCheeseType = extraCheeseType;
-    }
-
-    public boolean isCoveredInSalsaAndQueso() {
-        return coveredInSalsaAndQueso;
     }
 
     @Override

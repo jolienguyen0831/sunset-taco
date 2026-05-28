@@ -6,7 +6,8 @@ import com.pluralsight.models.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class UserInterface {
+public class
+UserInterface {
     private static final Scanner input = new Scanner(System.in);
     private Order newOrder;
     private ReceiptWriter receiptWriter;
