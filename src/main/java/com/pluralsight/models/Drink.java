@@ -28,10 +28,10 @@ public class Drink extends MenuItem {
 
     @Override
     public double getPrice() {
-        if (size.equalsIgnoreCase("Small") || size.equalsIgnoreCase("S")) {
+        if (size.equalsIgnoreCase("Small")) {
             return 2.00;
         }
-        if (size.equalsIgnoreCase("Medium") || size.equalsIgnoreCase("M")) {
+        if (size.equalsIgnoreCase("Medium")) {
             return 2.50;
         }
         //Large

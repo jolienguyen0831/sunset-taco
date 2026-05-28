@@ -49,6 +49,17 @@ public class UserInterface {
                                 WELCOME TO SUNSET TACO
                 ====================================================
                 
+                                    SIGNATURE TACO
+                    Street Taco                     Super Burrito
+                       3-Taco                           Burrito
+                    Corn Tortillas                  Flour Tortilla
+                     Carne Asada                       Carnitas
+                       Onions                           Cheddar
+                      Cilantro                      Pico de Gallo
+                     Salsa Verde                        Lettuce
+                     Lime Wedges                        Tomatoes
+                                                        Covered
+         
                                 BUILD YOUR OWN TACOS :)
                 
                     Single Taco         3-Taco Plate        Burrito
@@ -147,18 +158,23 @@ public class UserInterface {
                                 TACO TYPE
                         =======================
                         1. Street Taco (Signature)
-                        2.
+                        2. Super Burrito (Signature)
                         3. Build your own Taco
                         Enter your choice: \s""");
                 switch (readInput()) {
                     case "1" -> tacoType = "street";
+                    case "2" -> tacoType = "super";
                     case "3" -> tacoType = "custom";
                     default -> System.out.println("Invalid option. Please re-enter!");
                 }
             }
             Taco taco;
-            if (tacoType.equals("street")) {
-                taco = new StreetTaco();
+            if (tacoType.equals("street")|| tacoType.equals("super")) {
+                if (tacoType.equals("street")) {
+                    taco = new StreetTaco();
+                }else{
+                    taco = new SuperBurrito();
+                }
             } else {
                 String size = getTacoSize();
                 if (size.equals("return")) {
@@ -173,7 +189,7 @@ public class UserInterface {
                 taco = new Taco(size, shell);
             }
             System.out.println("\n Current taco:" + taco.toString());
-            if (taco instanceof StreetTaco) {
+            if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
                 getExtraMeat(taco);
                 getExtraCheese(taco);
             } else {
@@ -455,14 +471,15 @@ public class UserInterface {
         }
     }
     private void removeToppings(Taco taco){
-        if (taco instanceof StreetTaco) {
+        if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> toppings = taco.getRegularToppings();
             System.out.println("\nCurrent toppings:");
             for (int i = 0; i < toppings.size(); i++) {
                 System.out.println((i + 1) + ". " + toppings.get(i));
             }
-            System.out.print("Remove any toppings? " +
-                    "Enter numbers separated by commas, or Enter to skip: ");
+            System.out.print("""
+                    Remove any toppings?
+                    Enter numbers separated by commas, or Enter to skip:\s""");
             String removeInput = readInput();
             if (!removeInput.isEmpty()) {
                 for (String removeChoice : removeInput.split(",")) {
@@ -473,7 +490,7 @@ public class UserInterface {
                             taco.removeRegularTopping(toppings.get(choice-1));
                         }
                     } catch (Exception e) {
-                        System.out.println("Invalid input ignored.");
+                        System.out.println("Invalid Input. Please enter correct format.");
                     }
                 }
             }
@@ -512,14 +529,15 @@ public class UserInterface {
         }
     }
     private void removeSauces(Taco taco){
-        if (taco instanceof StreetTaco) {
+        if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> sauces = taco.getSauces();
             System.out.println("\nCurrent sauces:");
             for (int i = 0; i < sauces.size(); i++) {
                 System.out.println((i + 1) + ". " + sauces.get(i));
             }
-            System.out.print("Remove any sauces? " +
-                    "Enter numbers separated by commas, or Enter to skip: ");
+            System.out.print("""
+                    Remove any sauces?
+                    Enter numbers separated by commas, or Enter to skip: \s""");
             String removeInput = readInput();
             if (!removeInput.isEmpty()) {
                 for (String removeChoice : removeInput.split(",")) {
@@ -530,12 +548,11 @@ public class UserInterface {
                             taco.removeSauce(sauces.get(choice-1));
                         }
                     } catch (Exception e) {
-                        System.out.println("Invalid input ignored.");
+                        System.out.println("Invalid Input. Please enter correct format.");
                     }
                 }
             }
         }
-
     }
 
     private void getTacoSides(Taco taco) {
@@ -682,7 +699,7 @@ public class UserInterface {
     public void checkOut() {
         if (newOrder.getTacos().isEmpty()) {
             if (newOrder.getDrinks().isEmpty() && newOrder.getChipsAndSalsas().isEmpty()) {
-                System.out.println("You must order at least a drink or chips & salsa.");
+                System.out.println("\nYou must order at least a drink or chips & salsa.");
                 return;
             }
         }
