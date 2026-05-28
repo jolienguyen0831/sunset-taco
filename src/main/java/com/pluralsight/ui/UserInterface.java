@@ -77,6 +77,7 @@ UserInterface {
                    Pollo                                Burrito $3.00
                    Chorizo
                    Pescado
+                   Camaron
                      Extra Meat: Single +$0.50 | 3-Taco +$1.00 | Burrito +$1.50
                 3. CHEESE
                    Queso Fresco                         Single: $0.75
@@ -217,7 +218,7 @@ UserInterface {
     }
 
     private boolean getTacoMeat(Taco taco) {
-        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
+        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado","Camaron"};
         int meatIndex = -1;
         while (meatIndex < 0) {
             System.out.print("""
@@ -231,13 +232,14 @@ UserInterface {
                     4. Pollo
                     5. Chorizo
                     6. Pescado
-                    7. Restart taco screen
+                    7. Camaron
+                    8. Restart taco screen
                     Enter your choice:\s""");
             try {
                 int meatChoice = Integer.parseInt(readInput());
-                if (meatChoice == 7) {
+                if (meatChoice == 8) {
                     return true;
-                } else if (meatChoice >= 0 && meatChoice <= 6) {
+                } else if (meatChoice >= 0 && meatChoice <= 7) {
                     meatIndex = meatChoice;
                 } else {
                     System.out.println("Invalid option. Please re-enter!");
@@ -259,7 +261,7 @@ UserInterface {
     }
 
     private static void getExtraMeat(Taco taco) {
-        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado"};
+        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado","Camaron"};
         String extraMeatChoice = "";
         while (extraMeatChoice.isEmpty()) {
             System.out.print("""
@@ -289,11 +291,13 @@ UserInterface {
                         4. Pollo
                         5. Chorizo
                         6. Pescado
+                        7. Camaron
+                        0. Cancel
                         Enter your choice:\s""");
                 int extraMeatType = Integer.parseInt(readInput());
-                if (extraMeatType > 0 && extraMeatType <= 6) {
+                if (extraMeatType > 0 && extraMeatType <= 7) {
                     extraMeatIndex = extraMeatType;
-                } else if (extraMeatType == 7) {
+                } else if (extraMeatType == 0) {
                     break;
                 } else {
                     System.out.println("Invalid option. Please re-enter!");
@@ -419,12 +423,12 @@ UserInterface {
                         2. Oaxaca
                         3. Cotija
                         4. Cheddar
-                        5. Restart taco screen
+                        5. Cancel
                         Enter your choice:\s""");
                 int extraCheeseType = Integer.parseInt(readInput());
-                if (extraCheeseType > 0 && extraCheeseType <= 6) {
+                if (extraCheeseType > 0 && extraCheeseType <= 4) {
                     extraCheeseIndex = extraCheeseType;
-                } else if (extraCheeseType == 7) {
+                } else if (extraCheeseType == 5) {
                     break;
                 } else {
                     System.out.println("Invalid option. Please re-enter!");
@@ -463,9 +467,13 @@ UserInterface {
                     int choice = Integer.parseInt(toppingChoice.trim());
                     if (choice >= 1 && choice <= 9) {
                         taco.addRegularToppings(toppings[choice]);
+                        validInput = true;
+                    }else{
+                        System.out.println("Invalid option. Please re-enter!");
+                        validInput = false;
+
                     }
                 }
-                validInput = true;
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please enter correct format.");
             }
@@ -521,9 +529,12 @@ UserInterface {
                     int choice = Integer.parseInt(sauceChoice.trim());
                     if (choice >= 1 && choice <= 5) {
                         taco.addSauce(sauces[choice]);
+                        validInput = true;
+                    }else{
+                        System.out.println("Invalid Input. Please enter correct format.");
+                        validInput = false;
                     }
                 }
-                validInput = true;
             } catch (Exception e) {
                 System.out.println("Invalid Input. Please enter correct format.");
             }
@@ -741,7 +752,7 @@ UserInterface {
                     =========================
                     All items will be deleted
                     Y. Yes, cancel order
-                    N. No Go back
+                    N. No, go back
                     Enter your choice: \s""");
             switch (readInput()) {
                 case "y" -> {
