@@ -6,8 +6,7 @@ import com.pluralsight.models.*;
 import java.util.ArrayList;
 import java.util.Scanner;
 
-public class
-UserInterface {
+public class UserInterface {
     private static final Scanner input = new Scanner(System.in);
     private Order newOrder;
     private ReceiptWriter receiptWriter;
@@ -504,7 +503,6 @@ UserInterface {
                 }
             }
         }
-
     }
 
     private void getTacoSauces(Taco taco) {
@@ -602,7 +600,7 @@ UserInterface {
     }
 
     private void getTacoCover(Taco taco) {
-        System.out.println("\nCover in salsa & queso?(y/n)");
+        System.out.print("\nCover in salsa & queso?(y/n)");
         switch (readInput()) {
             case "y" -> taco.setCoveredInSalsaAndQueso(true);
             case "n" -> taco.setCoveredInSalsaAndQueso(false);
@@ -640,7 +638,7 @@ UserInterface {
                 String flavor = "";
                 while (flavor.isEmpty()) {
                     System.out.print("""
-                            1. Coke
+                            1. Cola
                             2. Horchata
                             3. Jamaica
                             Enter your choice:\s""");
@@ -698,6 +696,7 @@ UserInterface {
                         }
                         ChipsAndSalsa chipsAndSalsa = new ChipsAndSalsa(chips);
                         newOrder.addItem(chipsAndSalsa);
+                        System.out.println("\nSuccessfully added Chips & Salsa!");
 
                         return;
                     }

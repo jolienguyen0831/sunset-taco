@@ -1,0 +1,34 @@
+SUNSET TACO Receipt
+
+
+========================================
+              ORDER SUMMARY
+========================================
+
+Item #1 	 Street Taco (Signature) 	
+Taco
+Size: 3-Taco Plate
+Shell: Corn
+Meat: Carne Asada
+Cheese: null (Extra Queso Fresco)
+Regular Toppings:  - Onions  - Cilantro  - Jalapeños  - Radishes  - Pico de Gallo
+Sauces:  - Salsa Verde
+Sides:  - Lime Wedges  - Lime Wedges  - Crema
+Covered in Salsa & Queso: YES
+Price: $11.60
+
+
+Item #2 Drink
+Size   : Medium
+Flavor : Horchata
+Price  : $2.50
+
+Item #3 Chips & Salsa
+Chips  : Hot Cheetos
+Price : $1.50
+_______________________________________
+SUBTOTAL    : $15.60
+TAX (8.25%) : $1.29
+TOTAL       : $16.89
+
+Thank you for your order!
