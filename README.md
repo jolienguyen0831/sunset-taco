@@ -1,7 +1,7 @@
 # Sunset Taco
 A Java console application for ordering tacos, drinks, and chips & salsa at Sunset Taco. Customers can build their own custom taco or choose from signature options, customize toppings, sauces, sides, and more — then check out and receive a timestamped receipt file.
 ## Class Design!
-[SunsetTaco.drawio.png](diagrams/SunsetTaco.drawio.png)
+![SunsetTaco.png](diagrams/SunsetTaco.png)
 ## Features
 - Order signature tacos (Street Taco or Super Burrito) or build your own taco
 - Customize meat, cheese, toppings, sauces, sides, and salsa/queso cover
