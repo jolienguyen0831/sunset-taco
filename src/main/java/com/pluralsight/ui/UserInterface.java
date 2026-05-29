@@ -117,7 +117,6 @@ public class UserInterface {
         input.nextLine();
     }
 
-
     public void runOrderScreen() {
         boolean ordering = true;
         while (ordering) {
@@ -159,16 +158,41 @@ public class UserInterface {
                             TACO SCREEN
                     ========================
                     """);
+            // ask what type of taco
             String tacoType = selectTacoType();
+            // user return to order screen
             if (tacoType == null) {
                 return;
             }
+            // construct taco based on type
             Taco taco = buildTacoByType(tacoType);
             if (taco == null){
                 return;
             }
             customizeTaco(taco);
         }
+
+    private Taco buildTacoByType(String tacoType) {
+        if (tacoType.equals("street")) {
+            return new StreetTaco();
+        }
+        if (tacoType.equals("super"))  {
+            return new SuperBurrito();
+        }
+        while (true) {
+            String size = promptSizeSelection();
+            if (size.equals("return")){
+                System.out.println("\nReturning to home screen...");
+                return null;
+            }
+            String shell = promptShellSelection();
+            if (shell.equals("return")) {
+                System.out.println("\nReturning to size selection...");
+                continue;
+            }
+            return new Taco(size, shell);
+        }
+    }
 
     private void customizeTaco(Taco taco) {
         if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
@@ -201,28 +225,6 @@ public class UserInterface {
         newOrder.addItem(taco);
         System.out.println("\nTaco added successfully!");
 
-    }
-
-    private Taco buildTacoByType(String tacoType) {
-        if (tacoType.equals("street")) {
-            return new StreetTaco();
-        }
-        if (tacoType.equals("super"))  {
-            return new SuperBurrito();
-        }
-        while (true) {
-            String size = promptSizeSelection();
-            if (size.equals("return")){
-                System.out.println("\nReturning to home screen...");
-                return null;
-            }
-            String shell = promptShellSelection();
-            if (shell.equals("return")) {
-                System.out.println("\nReturning to size selection...");
-                continue;
-            }
-            return new Taco(size, shell);
-        }
     }
 
     private static String selectTacoType() {
@@ -516,6 +518,7 @@ public class UserInterface {
             }
         }
     }
+
     private void removeToppings(Taco taco){
         if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> toppings = taco.getRegularToppings();
@@ -575,6 +578,7 @@ public class UserInterface {
             }
         }
     }
+
     private void removeSauces(Taco taco){
         if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> sauces = taco.getSauces();
@@ -645,7 +649,6 @@ public class UserInterface {
         }
 
     }
-
 
     public void runDrinkScreen() {
         boolean inDrinkScreen = true;
@@ -805,6 +808,7 @@ public class UserInterface {
         }
         return cancelChoice.equals("yes");
     }
+
     private void displayTacoStatus(Taco taco){
         System.out.println("\n ~~ Current Taco ~~");
         System.out.printf("""

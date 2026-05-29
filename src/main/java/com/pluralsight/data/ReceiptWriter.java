@@ -30,8 +30,8 @@ public class ReceiptWriter {
             FileWriter fileWriter = new FileWriter(receiptFile);
             BufferedWriter writer = new BufferedWriter(fileWriter);
 
-            writer.write("SUNSET TACO Receipt");
-            writer.newLine();
+            writer.write("          SUNSET TACO Receipt");
+            writer.write("=======================================");
             writer.newLine();
             writer.newLine();
             writer.write(order.getOrderSummary());
@@ -39,7 +39,6 @@ public class ReceiptWriter {
             writer.write("Thank you for your order!");
             writer.close();
             System.out.println("Receipt saved successfully.");
-
 
         } catch (IOException e) {
             System.out.println("Error saving receipt.");
