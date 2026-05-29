@@ -20,6 +20,10 @@ public class Taco extends MenuItem {
         super("Taco");
         this.size = size;
         this.shell = shell;
+        this.meat = "";
+        this.cheese = "";
+        this.extraMeatType = "";
+        this.extraCheeseType = "";
         this.regularToppings = new ArrayList<>();
         this.sauces = new ArrayList<>();
         this.sides = new ArrayList<>();
@@ -206,13 +210,13 @@ public class Taco extends MenuItem {
             Covered in Salsa & Queso: %s
             Price  : $%.2f%n
             """, size, shell,
-                meat.isEmpty()
+                (meat == null ||meat.isEmpty())
                         ? "None"
                         : meat,
                 extraMeat
                         ? " (Extra " + extraMeatType + ")"
                         : "",
-                cheese.isEmpty()
+                (cheese == null || cheese.isEmpty())
                         ? "None"
                         : cheese,
                 extraCheese

@@ -11,10 +11,15 @@ public class UserInterface {
     private static final Scanner input = new Scanner(System.in);
     private Order newOrder;
     private ReceiptWriter receiptWriter;
+    private static final String[] MEATS = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado", "Camaron"};
+    private static final String[] CHEESES = {"", "Queso Fresco", "Oaxaca", "Cotija", "Cheddar"};
+    private static final String[] TOPPINGS = {"", "Lettuce", "Cilantro", "Onions", "Tomatoes",
+            "Jalapeños", "Radishes", "Pico de Gallo", "Guacamole", "Corn"};
+    private static final String[] SAUCES = {"", "Salsa Verde", "Salsa Roja", "Chipotle", "Habanero", "Mild"};
 
-    public void display() {
+    public void runHomeScreen() {
         boolean isRunning = true;
-        displayMenu();
+        displayWelcomeMenu();
         while (isRunning) {
             System.out.print("""
                     \n
@@ -26,7 +31,7 @@ public class UserInterface {
                 case "1" -> {
                     newOrder = new Order();
                     receiptWriter = new ReceiptWriter("receipts");
-                    showOrderScreen();
+                    runOrderScreen();
                 }
                 case "0" -> {
                     System.out.println("""
@@ -44,25 +49,25 @@ public class UserInterface {
         return input.nextLine().trim().toLowerCase();
     }
 
-    private static void displayMenu() {
+    private static void displayWelcomeMenu() {
         System.out.println("""
                 ====================================================
                                 WELCOME TO SUNSET TACO
                 ====================================================""");
-        System.out.println(AnsiColors.BOLD + AnsiColors.GREEN +"                    SIGNATURE TACO"+ AnsiColors.RESET);
+        System.out.println(AnsiColors.BOLD + AnsiColors.GREEN + "                    SIGNATURE TACO" + AnsiColors.RESET);
 
-        System.out.println(AnsiColors.PURPLE +AnsiColors.BOLD +"    Street Taco                     Super Burrito"+AnsiColors.RESET);
+        System.out.println(AnsiColors.PURPLE + AnsiColors.BOLD + "    Street Taco                     Super Burrito" + AnsiColors.RESET);
         System.out.println("""          
-                       3-Taco                           Burrito
-                    Corn Tortillas                  Flour Tortilla
-                     Carne Asada                       Carnitas
-                       Onions                           Cheddar
-                      Cilantro                      Pico de Gallo
-                     Salsa Verde                        Lettuce
-                     Lime Wedges                        Tomatoes
-                                                        Covered
-                   """);
-        System.out.println(AnsiColors.BOLD +AnsiColors.GREEN +"              BUILD YOUR OWN TACOS :)"+AnsiColors.RESET);
+                    3-Taco                           Burrito
+                 Corn Tortillas                  Flour Tortilla
+                  Carne Asada                       Carnitas
+                    Onions                           Cheddar
+                   Cilantro                      Pico de Gallo
+                  Salsa Verde                        Lettuce
+                  Lime Wedges                        Tomatoes
+                                                     Covered
+                """);
+        System.out.println(AnsiColors.BOLD + AnsiColors.GREEN + "              BUILD YOUR OWN TACOS :)" + AnsiColors.RESET);
 
         System.out.println("""
                 
@@ -112,7 +117,8 @@ public class UserInterface {
         input.nextLine();
     }
 
-    public void showOrderScreen() {
+
+    public void runOrderScreen() {
         boolean ordering = true;
         while (ordering) {
             System.out.print("""
@@ -128,12 +134,12 @@ public class UserInterface {
                     Please choose:\s""");
             String choice = readInput();
             switch (choice) {
-                case "1" -> addTaco();
-                case "2" -> addDrink();
-                case "3" -> addChipsAndSalsa();
+                case "1" -> runTacoScreen();
+                case "2" -> runDrinkScreen();
+                case "3" -> runChipsAndSalsaScreen();
                 case "4" -> System.out.println(newOrder.getOrderSummary());
                 case "5" -> {
-                    checkOut();
+                    runCheckOutScreen();
                     ordering = false;
                 }
                 case "0" -> {
@@ -147,90 +153,108 @@ public class UserInterface {
         }
     }
 
-    public void addTaco() {
-        boolean inTacoScreen = true;
-        while (inTacoScreen) {
-            inTacoScreen = false;
+    public void runTacoScreen() {
             System.out.println("""
                     \n
                             TACO SCREEN
                     ========================
                     """);
-            String tacoType = "";
-            while (tacoType.isEmpty()) {
-                System.out.println("""
-                        \n
-                                TACO TYPE
-                        =======================
-                        1. Street Taco (Signature)
-                        2. Super Burrito (Signature)
-                        3. Build your own Taco
-                        R. Return to home screen
-                        Enter your choice: \s""");
-                switch (readInput()) {
-                    case "1" -> tacoType = "street";
-                    case "2" -> tacoType = "super";
-                    case "3" -> tacoType = "custom";
-                    case "r" -> {
-                        return;
-                    }
-                    default -> System.out.println("Invalid option. Please re-enter!");
-                }
+            String tacoType = selectTacoType();
+            if (tacoType == null) {
+                return;
             }
-            Taco taco;
-            if (tacoType.equals("street")|| tacoType.equals("super")) {
-                if (tacoType.equals("street")) {
-                    taco = new StreetTaco();
-                }else{
-                    taco = new SuperBurrito();
-                }
-            } else {
-                String size = getTacoSize();
-                if (size.equals("return")) {
-                    return;
-                }
-                String shell = getTacoShell();
-                if (shell.equals("restart")) {
-                    inTacoScreen = true;
-                    System.out.println("\nStarting over...");
-                    continue;
-                }
-                taco = new Taco(size, shell);
+            Taco taco = buildTacoByType(tacoType);
+            if (taco == null){
+                return;
             }
+            customizeTaco(taco);
+        }
+
+    private void customizeTaco(Taco taco) {
+        if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             System.out.println("\n Current taco:" + taco.toString());
-            if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
-                getExtraMeat(taco);
-                getExtraCheese(taco);
-            } else {
-                printTacoStatus(taco);
-                boolean restart = getTacoMeat(taco);
-                if (restart) {
-                    inTacoScreen = true;
-                    System.out.println("\nStarting over...");
-                    continue;
-                }
-                printTacoStatus(taco);
-                restart = getTacoCheese(taco);
-                if (restart) {
-                    inTacoScreen = true;
-                    System.out.println("\nStarting over...");
-                    continue;
-                }
+            getExtraMeat(taco);
+            promptExtraCheese(taco);
+        } else {
+            displayTacoStatus(taco);
+            boolean restart = promptTacoMeat(taco);
+            if (restart) {
+                runTacoScreen();
+                System.out.println("\nStarting over...");
+                return;
             }
-            printTacoStatus(taco);
-            getTacoToppings(taco);
-            printTacoStatus(taco);
-            getTacoSauces(taco);
-            printTacoStatus(taco);
-            getTacoSides(taco);
-            getTacoCover(taco);
-            newOrder.addItem(taco);
-            System.out.println("\nTaco added successfully!");
+            displayTacoStatus(taco);
+            restart = promptTacoCheese(taco);
+            if (restart) {
+                runTacoScreen();
+                System.out.println("\nStarting over...");
+                return;
+            }
+        }
+        displayTacoStatus(taco);
+        promptTacoToppings(taco);
+        displayTacoStatus(taco);
+        promptTacoSauces(taco);
+        displayTacoStatus(taco);
+        promptTacoSides(taco);
+        promptTacoCover(taco);
+        newOrder.addItem(taco);
+        System.out.println("\nTaco added successfully!");
+
+    }
+
+    private Taco buildTacoByType(String tacoType) {
+        if (tacoType.equals("street")) {
+            return new StreetTaco();
+        }
+        if (tacoType.equals("super"))  {
+            return new SuperBurrito();
+        }
+        while (true) {
+            String size = promptSizeSelection();
+            if (size.equals("return")){
+                System.out.println("\nReturning to home screen...");
+                return null;
+            }
+            String shell = promptShellSelection();
+            if (shell.equals("return")) {
+                System.out.println("\nReturning to size selection...");
+                continue;
+            }
+            return new Taco(size, shell);
         }
     }
 
-    private boolean getTacoMeat(Taco taco) {
-        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado","Camaron"};
+    private static String selectTacoType() {
+        while (true) {
+            System.out.println("""
+                    \n
+                            TACO TYPE
+                    =======================
+                    1. Street Taco (Signature)
+                    2. Super Burrito (Signature)
+                    3. Build your own Taco
+                    R. Return to home screen
+                    Enter your choice: \s""");
+            switch (readInput()) {
+                case "1" -> {
+                    return  "street";
+                }
+                case "2" -> {
+                    return  "super";
+                }
+                case "3" -> {
+                    return  "custom";
+                }
+                case "r" -> {
+                    return null;
+                }
+                default -> System.out.println("Invalid option. Please re-enter!");
+            }
+        }
+    }
+
+    private boolean promptTacoMeat(Taco taco) {
         int meatIndex = -1;
         while (meatIndex < 0) {
             System.out.print("""
@@ -245,7 +269,7 @@ public class UserInterface {
                     5. Chorizo
                     6. Pescado
                     7. Camaron
-                    8. Restart taco screen
+                    8. Restart to taco screen
                     Enter your choice:\s""");
             try {
                 int meatChoice = Integer.parseInt(readInput());
@@ -257,7 +281,7 @@ public class UserInterface {
                     System.out.println("Invalid option. Please re-enter!");
                     break;
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid Input. Please enter a number.");
 
             }
@@ -265,7 +289,7 @@ public class UserInterface {
                 taco.setMeat("No meat");
                 return false;
             }
-            taco.setMeat(meats[meatIndex]);
+            taco.setMeat(MEATS[meatIndex]);
 
             getExtraMeat(taco);
         }
@@ -273,7 +297,6 @@ public class UserInterface {
     }
 
     private static void getExtraMeat(Taco taco) {
-        String[] meats = {"", "Carne Asada", "Al Pastor", "Carnitas", "Pollo", "Chorizo", "Pescado","Camaron"};
         String extraMeatChoice = "";
         while (extraMeatChoice.isEmpty()) {
             System.out.print("""
@@ -306,21 +329,25 @@ public class UserInterface {
                         7. Camaron
                         0. Cancel
                         Enter your choice:\s""");
-                int extraMeatType = Integer.parseInt(readInput());
-                if (extraMeatType > 0 && extraMeatType <= 7) {
-                    extraMeatIndex = extraMeatType;
-                } else if (extraMeatType == 0) {
-                    break;
-                } else {
-                    System.out.println("Invalid option. Please re-enter!");
-                    break;
+                try {
+                    int extraMeatType = Integer.parseInt(readInput());
+                    if (extraMeatType > 0 && extraMeatType <= 7) {
+                        extraMeatIndex = extraMeatType;
+                    } else if (extraMeatType == 0) {
+                        break;
+                    } else {
+                        System.out.println("Invalid option. Please re-enter!");
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("  Invalid option. Please enter a number.");
                 }
-                taco.setExtraMeatType(meats[extraMeatIndex]);
+                taco.setExtraMeatType(MEATS[extraMeatIndex]);
             }
         }
     }
 
-    private static String getTacoShell() {
+    private static String promptShellSelection() {
         String shell = "";
         while (shell.isEmpty()) {
             System.out.print("""
@@ -331,7 +358,7 @@ public class UserInterface {
                     2. Flour
                     3. Hard Shell
                     4. Bowl
-                    R. Restart taco screen
+                    R. Return to Size
                     Enter your choice:\s""");
             String shellChoice = readInput();
             switch (shellChoice) {
@@ -339,14 +366,14 @@ public class UserInterface {
                 case "2" -> shell = "Flour";
                 case "3" -> shell = "Hard Shell";
                 case "4" -> shell = "Bowl";
-                case "r" -> shell = "restart";
+                case "r" -> shell = "return";
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
         return shell;
     }
 
-    private static String getTacoSize() {
+    private static String promptSizeSelection() {
         String size = "";
         while (size.isEmpty()) {
             System.out.print("""
@@ -356,7 +383,7 @@ public class UserInterface {
                     1. Single Taco     $3.50
                     2. 3-Taco Plate    $9.00
                     3. Burrito         $8.50
-                    R. Return to Home Screen
+                    R. Return to order screen
                     Enter your choice:\s""");
             String sizeChoice = readInput();
             switch (sizeChoice) {
@@ -370,8 +397,7 @@ public class UserInterface {
         return size;
     }
 
-    private boolean getTacoCheese(Taco taco) {
-        String[] cheeses = {"", "Queso Fresco", "Oaxaca", "Cotija", "Cheddar"};
+    private boolean promptTacoCheese(Taco taco) {
         int cheeseIndex = -1;
         while (cheeseIndex < 0) {
             System.out.print("""
@@ -383,7 +409,7 @@ public class UserInterface {
                     2. Oaxaca
                     3. Cotija
                     4. Cheddar
-                    5. Restart taco screen
+                    5. Restart to taco screen
                     Enter your choice:\s""");
             try {
                 int choice = Integer.parseInt(readInput());
@@ -391,22 +417,21 @@ public class UserInterface {
                     return true;
                 } else if (choice >= 0 && choice <= 4) {
                     cheeseIndex = choice;
-                } else System.out.println("  Invalid option. Please enter 0 through 5.");
-            } catch (Exception e) {
-                System.out.println("  Invalid option. Please enter a number.");
+                } else System.out.println("Invalid option. Please enter 0 through 5.");
+            } catch (NumberFormatException e) {
+                System.out.println("Invalid option. Please enter a number.");
             }
         }
-
         if (cheeseIndex == 0) {
             taco.setCheese("No cheese");
             return false;
         }
-        taco.setCheese(cheeses[cheeseIndex]);
-        getExtraCheese(taco);
+        taco.setCheese(CHEESES[cheeseIndex]);
+        promptExtraCheese(taco);
         return false;
     }
 
-    private static void getExtraCheese(Taco taco) {
+    private static void promptExtraCheese(Taco taco) {
         String extraCheeseChoice = "";
         while (extraCheeseChoice.isEmpty()) {
             System.out.print("""
@@ -422,7 +447,6 @@ public class UserInterface {
                 default -> System.out.println("Invalid option. Please re-enter!");
             }
         }
-        String[] cheeses = {"", "Queso Fresco", "Oaxaca", "Cotija", "Cheddar"};
         if (extraCheeseChoice.equals("yes")) {
             taco.setExtraCheese(true);
             int extraCheeseIndex = -1;
@@ -437,26 +461,27 @@ public class UserInterface {
                         4. Cheddar
                         5. Cancel
                         Enter your choice:\s""");
-                int extraCheeseType = Integer.parseInt(readInput());
-                if (extraCheeseType > 0 && extraCheeseType <= 4) {
-                    extraCheeseIndex = extraCheeseType;
-                } else if (extraCheeseType == 5) {
-                    break;
-                } else {
-                    System.out.println("Invalid option. Please re-enter!");
-                    break;
+                try {
+                    int extraCheeseType = Integer.parseInt(readInput());
+                    if (extraCheeseType > 0 && extraCheeseType <= 4) {
+                        extraCheeseIndex = extraCheeseType;
+                    } else if (extraCheeseType == 5) {
+                        break;
+                    } else {
+                        System.out.println("Invalid option. Please re-enter!");
+                        break;
+                    }
+                } catch (NumberFormatException e) {
+                    System.out.println("  Invalid option. Please enter a number.");
                 }
-                taco.setExtraCheeseType(cheeses[extraCheeseIndex]);
+                taco.setExtraCheeseType(CHEESES[extraCheeseIndex]);
 
             }
         }
     }
 
-    private void getTacoToppings(Taco taco) {
-        String[] toppings = {"", "Lettuce", "Cilantro", "Onions", "Tomatoes",
-                "Jalapeños", "Radishes", "Pico de Gallo", "Guacamole", "Corn"};
+    private void promptTacoToppings(Taco taco) {
         removeToppings(taco);
-
         boolean validInput = false;
         while (!validInput) {
             System.out.print("""
@@ -478,7 +503,7 @@ public class UserInterface {
                 for (String toppingChoice : toppingChoices.split(",")) {
                     int choice = Integer.parseInt(toppingChoice.trim());
                     if (choice >= 1 && choice <= 9) {
-                        taco.addRegularToppings(toppings[choice]);
+                        taco.addRegularToppings(TOPPINGS[choice]);
                         validInput = true;
                     }else{
                         System.out.println("Invalid option. Please re-enter!");
@@ -486,7 +511,7 @@ public class UserInterface {
 
                     }
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid Input. Please enter correct format.");
             }
         }
@@ -494,12 +519,12 @@ public class UserInterface {
     private void removeToppings(Taco taco){
         if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> toppings = taco.getRegularToppings();
-            System.out.println("\nCurrent toppings:");
+            System.out.println("\nCurrent TOPPINGS:");
             for (int i = 0; i < toppings.size(); i++) {
                 System.out.println((i + 1) + ". " + toppings.get(i));
             }
             System.out.print("""
-                    Remove any toppings?
+                    Remove any TOPPINGS?
                     Enter numbers separated by commas, or Enter to skip:\s""");
             String removeInput = readInput();
             if (!removeInput.isEmpty()) {
@@ -507,10 +532,10 @@ public class UserInterface {
                     try {
                         int choice = Integer.parseInt(removeChoice.trim());
                         if (choice >= 1 && choice <= toppings.size()) {
-                            System.out.println("Removed "+ toppings.get(choice-1));
+                            System.out.println("\nRemoved "+ toppings.get(choice-1));
                             taco.removeRegularTopping(toppings.get(choice-1));
                         }
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Please enter correct format.");
                     }
                 }
@@ -518,8 +543,7 @@ public class UserInterface {
         }
     }
 
-    private void getTacoSauces(Taco taco) {
-        String[] sauces = {"", "Salsa Verde", "Salsa Roja", "Chipotle", "Habanero", "Mild"};
+    private void promptTacoSauces(Taco taco) {
         removeSauces(taco);
         boolean validInput = false;
         while (!validInput) {
@@ -539,14 +563,14 @@ public class UserInterface {
                 for (String sauceChoice : sauceChoices.split(",")) {
                     int choice = Integer.parseInt(sauceChoice.trim());
                     if (choice >= 1 && choice <= 5) {
-                        taco.addSauce(sauces[choice]);
+                        taco.addSauce(SAUCES[choice]);
                         validInput = true;
                     }else{
                         System.out.println("Invalid Input. Please enter correct format.");
                         validInput = false;
                     }
                 }
-            } catch (Exception e) {
+            } catch (NumberFormatException e) {
                 System.out.println("Invalid Input. Please enter correct format.");
             }
         }
@@ -554,12 +578,12 @@ public class UserInterface {
     private void removeSauces(Taco taco){
         if (taco instanceof StreetTaco || taco instanceof SuperBurrito) {
             ArrayList<String> sauces = taco.getSauces();
-            System.out.println("\nCurrent sauces:");
+            System.out.println("\nCurrent SAUCES:");
             for (int i = 0; i < sauces.size(); i++) {
                 System.out.println((i + 1) + ". " + sauces.get(i));
             }
             System.out.print("""
-                    Remove any sauces?
+                    Remove any SAUCES?
                     Enter numbers separated by commas, or Enter to skip: \s""");
             String removeInput = readInput();
             if (!removeInput.isEmpty()) {
@@ -567,10 +591,10 @@ public class UserInterface {
                     try {
                         int choice = Integer.parseInt(removeChoice.trim());
                         if (choice >= 1 && choice <= sauces.size()) {
-                            System.out.println("Removed "+ sauces.get(choice-1));
+                            System.out.println("\nRemoved "+ sauces.get(choice-1));
                             taco.removeSauce(sauces.get(choice-1));
                         }
-                    } catch (Exception e) {
+                    } catch (NumberFormatException e) {
                         System.out.println("Invalid Input. Please enter correct format.");
                     }
                 }
@@ -578,7 +602,7 @@ public class UserInterface {
         }
     }
 
-    private void getTacoSides(Taco taco) {
+    private void promptTacoSides(Taco taco) {
         String sideChoice = "";
         while (sideChoice.isEmpty()) {
             System.out.print("""
@@ -612,7 +636,7 @@ public class UserInterface {
 
     }
 
-    private void getTacoCover(Taco taco) {
+    private void promptTacoCover(Taco taco) {
         System.out.print("\nCover in salsa & queso?(y/n)");
         switch (readInput()) {
             case "y" -> taco.setCoveredInSalsaAndQueso(true);
@@ -623,7 +647,7 @@ public class UserInterface {
     }
 
 
-    public void addDrink() {
+    public void runDrinkScreen() {
         boolean inDrinkScreen = true;
         while (inDrinkScreen) {
             String size = "";
@@ -671,7 +695,7 @@ public class UserInterface {
         }
     }
 
-    public void addChipsAndSalsa() {
+    public void runChipsAndSalsaScreen() {
         boolean inChipsAndSalsaScreen = true;
         while (inChipsAndSalsaScreen) {
             System.out.print("""
@@ -720,7 +744,7 @@ public class UserInterface {
         }
     }
 
-    public void checkOut() {
+    public void runCheckOutScreen() {
         if (newOrder.getTacos().isEmpty()) {
             if (newOrder.getDrinks().isEmpty() && newOrder.getChipsAndSalsas().isEmpty()) {
                 System.out.println("\nYou must order at least a drink or chips & salsa.");
@@ -749,6 +773,7 @@ public class UserInterface {
         }
         if (confirmation.equals("confirm")) {
             receiptWriter.writeReceipt(newOrder);
+            System.out.println("Adding ...");
             System.out.println("Thank you for your order!");
         } else {
             System.out.println("Order cancelled.");
@@ -780,16 +805,16 @@ public class UserInterface {
         }
         return cancelChoice.equals("yes");
     }
-    private void printTacoStatus(Taco taco){
+    private void displayTacoStatus(Taco taco){
         System.out.println("\n ~~ Current Taco ~~");
         System.out.printf("""
                  Size : %s
                  Shell : %s%n""", taco.getSize() , taco.getShell());
-        if (taco.getMeat() != null)
+        if ( taco.getMeat() != null && !taco.getMeat().isEmpty())
             System.out.printf("Meat  : %s%n", taco.getMeat());
         if (taco.isExtraMeat())
             System.out.printf("Extra Meat : %s%n", taco.getExtraMeatType());
-        if (taco.getCheese() != null)
+        if (taco.getCheese() != null && !taco.getCheese().isEmpty() )
             System.out.printf("Cheese : %s%n", taco.getCheese());
         if (taco.isExtraCheese())
             System.out.printf("Extra Cheese : %s%n", taco.getExtraCheeseType());
@@ -799,6 +824,5 @@ public class UserInterface {
             System.out.printf("Sauces : %s%n", taco.getSauces());
         if (!taco.getSides().isEmpty())
             System.out.printf("Sides : %s%n", taco.getSides());
-
     }
 }

@@ -38,9 +38,8 @@ public class ReceiptWriter {
             writer.newLine();
             writer.write("Thank you for your order!");
             writer.close();
-
             System.out.println("Receipt saved successfully.");
-            System.out.println("File name: " + fileName);
+
 
         } catch (IOException e) {
             System.out.println("Error saving receipt.");

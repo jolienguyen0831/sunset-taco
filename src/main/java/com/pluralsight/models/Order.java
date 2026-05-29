@@ -1,7 +1,10 @@
 package com.pluralsight.models;
 
 import java.util.ArrayList;
+
 import java.util.List;
+
+import java.util.stream.Collectors;
 
 public class Order {
     private List<MenuItem> items;
@@ -46,33 +49,24 @@ public class Order {
         stringBuilder.append(String.format("TOTAL       : $%.2f%n", (getTotalPrice()+tax)));
         return stringBuilder.toString();
     }
-    public ArrayList<Taco> getTacos(){
-        ArrayList<Taco> tacos = new ArrayList<>();
-        for(MenuItem item: items){
-            if (item instanceof Taco){
-                tacos.add((Taco)item);
-            }
-        }
-        return tacos;
+    public List<Taco> getTacos(){
+        return items.stream()
+                .filter(item -> item instanceof Taco)
+                .map(item -> (Taco) item)
+                .collect(Collectors.toList());
     }
-    public ArrayList<Drink> getDrinks(){
-        ArrayList<Drink> drinks = new ArrayList<>();
-        for(MenuItem item: items){
-            if (item instanceof Drink){
-                drinks.add((Drink) item);
-            }
-        }
-        return drinks;
+    public List<Drink> getDrinks() {
+        return items.stream()
+                .filter(item -> item instanceof Drink)
+                .map(item -> (Drink) item)
+                .collect(Collectors.toList());
     }
 
-    public ArrayList<ChipsAndSalsa> getChipsAndSalsas(){
-        ArrayList<ChipsAndSalsa> chipsAndSalsas = new ArrayList<>();
-        for(MenuItem item: items){
-            if (item instanceof ChipsAndSalsa){
-                chipsAndSalsas.add((ChipsAndSalsa) item);
-            }
-        }
-        return chipsAndSalsas;
+    public List<ChipsAndSalsa> getChipsAndSalsas() {
+        return items.stream()
+                .filter(item -> item instanceof ChipsAndSalsa)
+                .map(item -> (ChipsAndSalsa) item)
+                .collect(Collectors.toList());
     }
 
 }
