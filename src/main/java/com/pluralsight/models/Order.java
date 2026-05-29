@@ -42,7 +42,7 @@ public class Order {
             stringBuilder.append(items.get(i).toString());
             itemNumber++;
         }
-        stringBuilder.append("_______________________________________\n");
+        stringBuilder.append("________________________________________\n");
         stringBuilder.append(String.format("SUBTOTAL    : $%.2f%n", getTotalPrice()));
         double tax = getTotalPrice() * 0.0825;
         stringBuilder.append(String.format("TAX (8.25%%) : $%.2f%n", tax));

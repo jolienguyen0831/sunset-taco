@@ -31,7 +31,9 @@ public class ReceiptWriter {
             BufferedWriter writer = new BufferedWriter(fileWriter);
 
             writer.write("          SUNSET TACO Receipt");
-            writer.write("=======================================");
+            writer.write("\n========================================\n");
+            writer.write("       123 Sunrise Rd, Sun City\n");
+            writer.write("          Happy Valley, OR 12345  ");
             writer.newLine();
             writer.newLine();
             writer.write(order.getOrderSummary());

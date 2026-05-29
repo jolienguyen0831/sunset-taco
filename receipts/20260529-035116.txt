@@ -1,0 +1,20 @@
+          SUNSET TACO Receipt
+========================================
+       123 Sunrise Rd, Sun City
+          Happy Valley, OR 12345  
+
+========================================
+              ORDER SUMMARY
+========================================
+
+Item #1 
+
+Chips & Salsa
+Chips  : Hot Cheetos
+Price  : $1.50
+_______________________________________
+SUBTOTAL    : $1.50
+TAX (8.25%) : $0.12
+TOTAL       : $1.62
+
+Thank you for your order!

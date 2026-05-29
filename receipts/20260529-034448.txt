@@ -1,0 +1,29 @@
+          SUNSET TACO Receipt=======================================
+
+========================================
+              ORDER SUMMARY
+========================================
+
+Item #1 Drink
+Size   : Large
+Flavor : Coke
+Price  : $3.00
+
+Item #2 	 Street Taco (Signature) 	
+Taco
+Size: 3-Taco Plate
+Shell: Corn
+Meat: Carne Asada (Extra Al Pastor)
+Cheese: None (Extra Cotija)
+Regular Toppings:  - Onions  - Cilantro
+Sauces:  - Salsa Verde
+Sides:  - Lime Wedges  - Lime Wedges  - Crema
+Covered in Salsa & Queso: YES
+Price  : $14.10
+
+_______________________________________
+SUBTOTAL    : $17.10
+TAX (8.25%) : $1.41
+TOTAL       : $18.51
+
+Thank you for your order!
