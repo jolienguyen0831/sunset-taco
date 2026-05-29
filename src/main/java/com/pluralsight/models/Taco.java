@@ -25,15 +25,49 @@ public class Taco extends MenuItem {
         this.sides = new ArrayList<>();
     }
 
-    public ArrayList<String> getRegularToppings() {
-        return regularToppings;
+    public String getSize() {
+        return size;
     }
 
-    public ArrayList<String> getSauces() {
-        return sauces;
+    public String getShell() {
+        return shell;
     }
 
+    public ArrayList<String> getSides() {
+        return sides;
+    }
 
+    public String getMeat() {
+        return meat;
+    }
+
+    public boolean isExtraMeat() {
+        return extraMeat;
+    }
+
+    public String getExtraMeatType() {
+        return extraMeatType;
+    }
+
+    public String getCheese() {
+        return cheese;
+    }
+
+    public boolean isExtraCheese() {
+        return extraCheese;
+    }
+
+    public String getExtraCheeseType() {
+        return extraCheeseType;
+    }
+
+    public boolean isCoveredInSalsaAndQueso() {
+        return coveredInSalsaAndQueso;
+    }
+
+    public ArrayList<String> getRegularToppings() { return regularToppings;}
+
+    public ArrayList<String> getSauces() { return sauces; }
 
     public void addRegularToppings(String regularTopping) {
         regularToppings.add(regularTopping);
@@ -171,11 +205,16 @@ public class Taco extends MenuItem {
             Sides:%s
             Covered in Salsa & Queso: %s
             Price  : $%.2f%n
-            """, size, shell, meat,
+            """, size, shell,
+                meat.isEmpty()
+                        ? "None"
+                        : meat,
                 extraMeat
                         ? " (Extra " + extraMeatType + ")"
                         : "",
-                cheese,
+                cheese.isEmpty()
+                        ? "None"
+                        : cheese,
                 extraCheese
                         ? " (Extra " + extraCheeseType + ")"
                         : "",

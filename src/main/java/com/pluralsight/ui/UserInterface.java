@@ -165,11 +165,15 @@ public class UserInterface {
                         1. Street Taco (Signature)
                         2. Super Burrito (Signature)
                         3. Build your own Taco
+                        R. Return to home screen
                         Enter your choice: \s""");
                 switch (readInput()) {
                     case "1" -> tacoType = "street";
                     case "2" -> tacoType = "super";
                     case "3" -> tacoType = "custom";
+                    case "r" -> {
+                        return;
+                    }
                     default -> System.out.println("Invalid option. Please re-enter!");
                 }
             }
@@ -198,12 +202,14 @@ public class UserInterface {
                 getExtraMeat(taco);
                 getExtraCheese(taco);
             } else {
+                printTacoStatus(taco);
                 boolean restart = getTacoMeat(taco);
                 if (restart) {
                     inTacoScreen = true;
                     System.out.println("\nStarting over...");
                     continue;
                 }
+                printTacoStatus(taco);
                 restart = getTacoCheese(taco);
                 if (restart) {
                     inTacoScreen = true;
@@ -211,8 +217,11 @@ public class UserInterface {
                     continue;
                 }
             }
+            printTacoStatus(taco);
             getTacoToppings(taco);
+            printTacoStatus(taco);
             getTacoSauces(taco);
+            printTacoStatus(taco);
             getTacoSides(taco);
             getTacoCover(taco);
             newOrder.addItem(taco);
@@ -770,5 +779,26 @@ public class UserInterface {
             }
         }
         return cancelChoice.equals("yes");
+    }
+    private void printTacoStatus(Taco taco){
+        System.out.println("\n ~~ Current Taco ~~");
+        System.out.printf("""
+                 Size : %s
+                 Shell : %s%n""", taco.getSize() , taco.getShell());
+        if (taco.getMeat() != null)
+            System.out.printf("Meat  : %s%n", taco.getMeat());
+        if (taco.isExtraMeat())
+            System.out.printf("Extra Meat : %s%n", taco.getExtraMeatType());
+        if (taco.getCheese() != null)
+            System.out.printf("Cheese : %s%n", taco.getCheese());
+        if (taco.isExtraCheese())
+            System.out.printf("Extra Cheese : %s%n", taco.getExtraCheeseType());
+        if (!taco.getRegularToppings().isEmpty())
+            System.out.printf("Toppings : %s%n", taco.getRegularToppings());
+        if (!taco.getSauces().isEmpty())
+            System.out.printf("Sauces : %s%n", taco.getSauces());
+        if (!taco.getSides().isEmpty())
+            System.out.printf("Sides : %s%n", taco.getSides());
+
     }
 }

@@ -4,6 +4,7 @@ public class StreetTaco extends Taco{
     public StreetTaco(){
         super("3-Taco Plate","Corn");
         this.meat = "Carne Asada";
+        this.cheese ="";
         this.addRegularToppings("Onions");
         this.addRegularToppings("Cilantro");
         this.addSauce("Salsa Verde");
