@@ -14,9 +14,10 @@ public class ChipsAndSalsa extends MenuItem {
     @Override
     public String toString() {
         return String.format("""
+            \n
             Chips & Salsa
             Chips  : %s
-            Price : $%.2f
+            Price  : $%.2f
             """, name, price);
     }
 }

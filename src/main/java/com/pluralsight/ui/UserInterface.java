@@ -2,6 +2,7 @@ package com.pluralsight.ui;
 
 import com.pluralsight.data.ReceiptWriter;
 import com.pluralsight.models.*;
+import com.pluralsight.util.AnsiColors;
 
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -47,10 +48,11 @@ public class UserInterface {
         System.out.println("""
                 ====================================================
                                 WELCOME TO SUNSET TACO
-                ====================================================
-                
-                                    SIGNATURE TACO
-                    Street Taco                     Super Burrito
+                ====================================================""");
+        System.out.println(AnsiColors.BOLD + AnsiColors.GREEN +"                    SIGNATURE TACO"+ AnsiColors.RESET);
+
+        System.out.println(AnsiColors.PURPLE +AnsiColors.BOLD +"    Street Taco                     Super Burrito"+AnsiColors.RESET);
+        System.out.println("""          
                        3-Taco                           Burrito
                     Corn Tortillas                  Flour Tortilla
                      Carne Asada                       Carnitas
@@ -59,8 +61,10 @@ public class UserInterface {
                      Salsa Verde                        Lettuce
                      Lime Wedges                        Tomatoes
                                                         Covered
-         
-                                BUILD YOUR OWN TACOS :)
+                   """);
+        System.out.println(AnsiColors.BOLD +AnsiColors.GREEN +"              BUILD YOUR OWN TACOS :)"+AnsiColors.RESET);
+
+        System.out.println("""
                 
                     Single Taco         3-Taco Plate        Burrito
                         $3.50               $9.00            $8.50
@@ -101,7 +105,7 @@ public class UserInterface {
                                       ~~  DRINKS  ~~
                     Small $2.00         Medium $2.50        Large $3.00
                                    ~~ CHIPS & SALSA  ~~
-                    $1.50 - choice of any salsa
+                    $1.50 - choice of any chips
                 
                 Please press ENTER to start!
                 """);

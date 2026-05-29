@@ -170,7 +170,7 @@ public class Taco extends MenuItem {
             Sauces:%s
             Sides:%s
             Covered in Salsa & Queso: %s
-            Price: $%.2f%n
+            Price  : $%.2f%n
             """, size, shell, meat,
                 extraMeat
                         ? " (Extra " + extraMeatType + ")"
