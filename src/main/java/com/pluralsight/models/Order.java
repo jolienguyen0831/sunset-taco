@@ -38,7 +38,7 @@ public class Order {
                 """);
         int itemNumber = 1;
         for (int i = items.size() - 1; i >= 0; i--) {
-            stringBuilder.append(String.format("\nItem #%s ", itemNumber));
+            stringBuilder.append(String.format("\nItem #%s", itemNumber));
             stringBuilder.append(items.get(i).toString());
             itemNumber++;
         }

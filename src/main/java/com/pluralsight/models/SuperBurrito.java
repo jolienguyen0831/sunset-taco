@@ -19,6 +19,6 @@ public class SuperBurrito extends Taco{
 
     @Override
     public String toString(){
-        return "\t Super Burrito (Signature) \t\n" + super.toString();
+        return " Super Burrito (Signature)\n" + super.toString();
     }
 }

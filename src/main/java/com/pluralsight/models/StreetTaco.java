@@ -19,6 +19,6 @@ public class StreetTaco extends Taco{
 
     @Override
     public String toString(){
-        return "\t Street Taco (Signature) \t\n" + super.toString();
+        return " Street Taco (Signature)\n" + super.toString();
     }
 }
